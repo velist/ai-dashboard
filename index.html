@@ -360,8 +360,10 @@
             <div class="flex items-start space-x-2">
                 <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-semibold flex-shrink-0">AI</div>
                 <div class="bg-white rounded-lg p-3 shadow-sm max-w-[80%]">
-                    <p class="text-sm text-gray-700">你好！我是数据助手，可以帮你分析和查询仪表盘数据。你可以问我：</p>
-                    <ul class="text-sm text-gray-600 mt-2 space-y-1">
+                    <p class="text-sm text-gray-700">你好！我是数据助手，可以帮你分析和查询仪表盘数据。</p>
+                    <p class="text-xs text-gray-500 mt-2">💡 首次使用需配置 API Key（免费获取：<a href="https://siliconflow.cn" target="_blank" class="text-blue-500 underline">siliconflow.cn</a>）</p>
+                    <p class="text-sm text-gray-700 mt-2">你可以问我：</p>
+                    <ul class="text-sm text-gray-600 mt-1 space-y-1">
                         <li>• 最近7天有多少用户？</li>
                         <li>• 进入问诊率是多少？</li>
                         <li>• 哪个科室最受欢迎？</li>
@@ -1212,11 +1214,34 @@
 
         // ==================== AI 聊天助手 ====================
 
-        const SILICONFLOW_API_KEY = 'sk-yzeczizqzuooohefggducuupcnufcnnndiwnkbwsouoztokx';
         const SILICONFLOW_API_URL = 'https://api.siliconflow.cn/v1/chat/completions';
         const AI_MODEL = 'Qwen/Qwen2.5-7B-Instruct'; // 免费模型
 
         let chatHistory = [];
+
+        // 从localStorage获取API key
+        function getAPIKey() {
+            return localStorage.getItem('siliconflow_api_key') || '';
+        }
+
+        // 保存API key到localStorage
+        function saveAPIKey(key) {
+            localStorage.setItem('siliconflow_api_key', key);
+        }
+
+        // 检查API key是否已配置
+        function checkAPIKey() {
+            const key = getAPIKey();
+            if (!key) {
+                const userKey = prompt('请输入您的硅基流动 API Key:\n\n您可以在 https://siliconflow.cn 免费获取\n\n提示：API Key 将保存在浏览器本地，不会上传到服务器');
+                if (userKey) {
+                    saveAPIKey(userKey.trim());
+                    return userKey.trim();
+                }
+                return null;
+            }
+            return key;
+        }
 
         // 切换聊天窗口
         function toggleChat() {
@@ -1300,6 +1325,11 @@
 
         // 调用硅基流动 API
         async function callSiliconFlowAPI(userMessage, dataContext) {
+            const apiKey = checkAPIKey();
+            if (!apiKey) {
+                return '未配置 API Key，无法使用 AI 助手。';
+            }
+
             const systemPrompt = `你是一个数据分析助手，专门帮助用户理解和分析 AI病例研习平台的数据。
 
 当前数据概览（${dataContext.timeRange}）：
@@ -1328,7 +1358,7 @@
                 const response = await fetch(SILICONFLOW_API_URL, {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${SILICONFLOW_API_KEY}`,
+                        'Authorization': `Bearer ${apiKey}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
@@ -1341,7 +1371,21 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error(`API请求失败: ${response.status}`);
+                    const errorData = await response.json().catch(() => ({}));
+
+                    // 处理余额不足错误
+                    if (errorData.code === 30001 || errorData.message?.includes('insufficient')) {
+                        localStorage.removeItem('siliconflow_api_key');
+                        return '您的 API Key 余额不足。请重新配置有效的 API Key，或访问 https://siliconflow.cn 充值。';
+                    }
+
+                    // 处理认证错误
+                    if (response.status === 401 || response.status === 403) {
+                        localStorage.removeItem('siliconflow_api_key');
+                        return 'API Key 无效或已过期。请重新配置。';
+                    }
+
+                    throw new Error(`API请求失败: ${response.status} - ${errorData.message || response.statusText}`);
                 }
 
                 const data = await response.json();
@@ -1352,7 +1396,7 @@
                 return aiResponse;
             } catch (error) {
                 console.error('AI API错误:', error);
-                return '抱歉，AI助手暂时无法响应。请稍后再试。';
+                return `抱歉，AI助手遇到错误：${error.message}。\n\n如需重新配置 API Key，请刷新页面。`;
             }
         }
 
