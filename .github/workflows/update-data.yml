@@ -2,8 +2,8 @@ name: 更新数据
 
 on:
   schedule:
-    # 每小时执行一次（整点）
-    - cron: '0 * * * *'
+    # 每天凌晨1点（UTC时间）执行一次
+    - cron: '0 1 * * *'
   workflow_dispatch: # 允许手动触发
 
 jobs:
