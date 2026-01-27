@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '*.html'
+      - '*.md'
+      - '.github/workflows/**'
   workflow_dispatch: # 允许手动触发
 
 jobs:
@@ -14,15 +18,15 @@ jobs:
       - name: 检出代码
         uses: actions/checkout@v3
 
-      # 注意：Cloudflare Pages已通过GitHub集成自动部署
-      # 当代码推送到main分支时，Cloudflare会自动检测并部署
-      # 无需此workflow也能自动部署
-      # 此workflow仅用于显式提示部署完成
+      - name: 设置Node.js环境
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
-      - name: 部署完成
+      - name: 部署到Cloudflare Pages
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
         run: |
-          echo "✅ 代码已推送到main分支"
-          echo "📚 Cloudflare Pages会自动部署"
-          echo "🌐 访问地址："
-          echo "   - https://ai-dashboard-6p0.pages.dev/"
-          echo "   - https://bltestdata.aipush.fun/"
+          npx wrangler pages deploy . --project-name=ai-dashboard --branch=main --commit-dirty=true
+
