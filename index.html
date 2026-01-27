@@ -90,6 +90,38 @@
                 </div>
                 <div class="flex items-center space-x-4">
                     <span id="data-time-range" class="text-sm text-gray-500"></span>
+                    <!-- 导出按钮 -->
+                    <div class="relative">
+                        <button id="export-btn" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center space-x-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                            </svg>
+                            <span>导出数据</span>
+                        </button>
+                        <!-- 导出格式下拉菜单 -->
+                        <div id="export-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                            <div class="py-1">
+                                <button onclick="exportData('csv')" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    <span>导出为 CSV</span>
+                                </button>
+                                <button onclick="exportData('json')" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path>
+                                    </svg>
+                                    <span>导出为 JSON</span>
+                                </button>
+                                <button onclick="exportData('excel')" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <span>导出为 Excel</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                     <button id="refresh-btn" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
                         <span id="refresh-text">加载中...</span>
                     </button>
@@ -413,8 +445,43 @@
             </button>
         </div>
 
+        <!-- 模型选择器 -->
+        <div class="px-4 py-2 bg-blue-50 border-b border-blue-100">
+            <div class="flex items-center space-x-2">
+                <label for="ai-model-select" class="text-xs text-gray-600 font-medium">模型：</label>
+                <select
+                    id="ai-model-select"
+                    class="flex-1 text-xs px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-400 focus:border-blue-400 bg-white"
+                    onchange="updateModelDisplay()"
+                >
+                    <option value="Qwen/Qwen2.5-7B-Instruct">Qwen2.5-7B（默认-快速）</option>
+                    <option value="Qwen/Qwen2.5-72B-Instruct">Qwen2.5-72B（强大-准确）</option>
+                    <option value="deepseek-ai/DeepSeek-V3">DeepSeek-V3（最强-推理）</option>
+                    <option value="THUDM/glm-4-9b-chat">GLM-4-9B（中文优化）</option>
+                    <option value="meta-llama/Llama-3.3-70B-Instruct">Llama-3.3-70B（通用）</option>
+                    <option value="alibaba/Qwen2.5-Coder-7B-Instruct">Qwen2.5-Coder-7B（代码）</option>
+                </select>
+            </div>
+            <p id="model-description" class="text-xs text-gray-500 mt-1">均衡速度和质量，适合日常查询</p>
+        </div>
+
         <!-- 聊天消息区域 -->
         <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50">
+            <div class="flex items-start space-x-2">
+                <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-semibold flex-shrink-0">AI</div>
+                <div class="bg-white rounded-lg p-3 shadow-sm max-w-[80%]">
+                    <p class="text-sm text-gray-700">你好！我是数据助手，可以帮你分析和查询仪表盘数据。</p>
+                    <p class="text-xs text-gray-500 mt-2">💡 已为团队统一配置，可直接使用</p>
+                    <p class="text-sm text-gray-700 mt-2">你可以问我：</p>
+                    <ul class="text-sm text-gray-600 mt-1 space-y-1">
+                        <li>• 最近7天有多少用户？</li>
+                        <li>• 进入问诊率是多少？</li>
+                        <li>• 哪个科室最受欢迎？</li>
+                        <li>• 用户活跃趋势如何？</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
             <div class="flex items-start space-x-2">
                 <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-semibold flex-shrink-0">AI</div>
                 <div class="bg-white rounded-lg p-3 shadow-sm max-w-[80%]">
@@ -1459,6 +1526,22 @@
             console.log('用户类型筛选:', e.target.value);
         });
 
+        // 导出按钮和菜单控制
+        document.getElementById('export-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            const menu = document.getElementById('export-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // 点击其他地方关闭导出菜单
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('export-menu');
+            const btn = document.getElementById('export-btn');
+            if (!menu.contains(e.target) && !btn.contains(e.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+
         // 响应式处理
         window.addEventListener('resize', () => {
             Object.values(chartInstances).forEach(chart => {
@@ -1468,13 +1551,143 @@
             });
         });
 
+        // ==================== 数据导出功能 ====================
+
+        // 导出数据函数
+        function exportData(format) {
+            // 关闭菜单
+            document.getElementById('export-menu').classList.add('hidden');
+
+            if (!currentData || currentData.length === 0) {
+                alert('没有可导出的数据');
+                return;
+            }
+
+            const timeRange = document.getElementById('data-time-range').textContent;
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+            const filename = `AI病例研习平台数据_${timestamp}`;
+
+            // 准备导出数据（清洗后的currentData）
+            const exportableData = currentData.map(item => ({
+                用户ID: item.user_id || '',
+                模块: item.module || '',
+                动作类型: item.action_type || '',
+                事件元素: item.element || item.view || '',
+                状态: item.status || '',
+                试用标识: item.trial || '',
+                日期: item.date || new Date(parseInt(item.time)).toLocaleDateString('zh-CN'),
+                时间: item.time_str || new Date(parseInt(item.time)).toLocaleTimeString('zh-CN')
+            }));
+
+            switch (format) {
+                case 'csv':
+                    exportToCSV(exportableData, filename);
+                    break;
+                case 'json':
+                    exportToJSON(currentData, filename);
+                    break;
+                case 'excel':
+                    exportToExcel(exportableData, filename);
+                    break;
+            }
+        }
+
+        // 导出为CSV
+        function exportToCSV(data, filename) {
+            if (data.length === 0) return;
+
+            const headers = Object.keys(data[0]);
+            const csvContent = [
+                headers.join(','),
+                ...data.map(row =>
+                    headers.map(header => {
+                        const value = row[header] || '';
+                        // 处理包含逗号或换行的字段
+                        return `"${String(value).replace(/"/g, '""')}"`;
+                    }).join(',')
+                )
+            ].join('\n');
+
+            // 添加BOM以支持Excel正确打开中文
+            const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+            downloadFile(blob, `${filename}.csv`);
+        }
+
+        // 导出为JSON
+        function exportToJSON(data, filename) {
+            const jsonContent = JSON.stringify(data, null, 2);
+            const blob = new Blob([jsonContent], { type: 'application/json;charset=utf-8;' });
+            downloadFile(blob, `${filename}.json`);
+        }
+
+        // 导出为Excel（使用HTML表格方式）
+        function exportToExcel(data, filename) {
+            if (data.length === 0) return;
+
+            const headers = Object.keys(data[0]);
+            let excelContent = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>数据</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><meta charset="UTF-8"></head><body><table>';
+
+            // 表头
+            excelContent += '<tr>' + headers.map(h => `<th style="background-color: #4472C4; color: white; font-weight: bold; border: 1px solid #ccc; padding: 8px;">${h}</th>`).join('') + '</tr>';
+
+            // 数据行
+            data.forEach(row => {
+                excelContent += '<tr>' + headers.map(h => `<td style="border: 1px solid #ccc; padding: 8px;">${row[h] || ''}</td>`).join('') + '</tr>';
+            });
+
+            excelContent += '</table></body></html>';
+
+            const blob = new Blob(['\ufeff' + excelContent], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+            downloadFile(blob, `${filename}.xls`);
+        }
+
+        // 下载文件
+        function downloadFile(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            // 显示成功提示
+            alert(`导出成功！文件名：${filename}`);
+        }
+
         // ==================== AI 聊天助手 ====================
 
         // 使用 Cloudflare Worker 代理（API Key 安全存储在 Worker 环境变量中）
         const AI_PROXY_URL = 'https://ai-dashboard-proxy.vee5208.workers.dev';
-        const AI_MODEL = 'Qwen/Qwen2.5-7B-Instruct'; // 免费模型
 
         let chatHistory = [];
+
+        // 模型描述映射
+        const MODEL_DESCRIPTIONS = {
+            'Qwen/Qwen2.5-7B-Instruct': '均衡速度和质量，适合日常查询',
+            'Qwen/Qwen2.5-72B-Instruct': '更强大的推理能力，适合复杂分析',
+            'deepseek-ai/DeepSeek-V3': '顶级推理能力，适合深度分析',
+            'THUDM/glm-4-9b-chat': '中文理解优秀，适合本土化场景',
+            'meta-llama/Llama-3.3-70B-Instruct': '通用能力强，适合多样化任务',
+            'alibaba/Qwen2.5-Coder-7B-Instruct': '代码理解优秀，适合技术问题'
+        };
+
+        // 获取当前选中的模型
+        function getCurrentModel() {
+            const select = document.getElementById('ai-model-select');
+            return select ? select.value : 'Qwen/Qwen2.5-7B-Instruct';
+        }
+
+        // 更新模型描述
+        function updateModelDisplay() {
+            const model = getCurrentModel();
+            const description = MODEL_DESCRIPTIONS[model] || '高质量AI模型';
+            const descElement = document.getElementById('model-description');
+            if (descElement) {
+                descElement.textContent = description;
+            }
+        }
 
         // 切换聊天窗口
         function toggleChat() {
@@ -1583,13 +1796,14 @@
             ];
 
             try {
+                const currentModel = getCurrentModel();
                 const response = await fetch(AI_PROXY_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        model: AI_MODEL,
+                        model: currentModel,
                         messages: messages,
                         temperature: 0.7,
                         max_tokens: 500,
