@@ -1,12 +1,26 @@
 {
-  "updateTime": "2026-01-27T06:07:54.985034",
-  "dataCount": 2105,
+  "updateTime": "2026-01-27T06:55:27.809456",
+  "dataCount": 2106,
   "userCount": 477,
   "timeRange": {
     "start": "2026-01-07T19:05:15",
-    "end": "2026-01-27T12:24:54"
+    "end": "2026-01-27T14:26:01"
   },
   "data": [
+    {
+      "user_id": "ed72d340-985f-4a24-88e9-feccdfe18657",
+      "ksbaoUserId": 511520838.0,
+      "module": "引导页",
+      "action_type": "enter",
+      "element": "引导页访问",
+      "status": "success",
+      "trial": 0,
+      "is_vip": false,
+      "subject": "PD-NOTE-318",
+      "km": "骨外科学(中级)［代码：318］",
+      "provider": "ksbao",
+      "time": "2026-01-27T14:26:01"
+    },
     {
       "user_id": "57d2dcde-e87d-41f2-b45f-e8c5c7523766",
       "ksbaoUserId": 512343593.0,
