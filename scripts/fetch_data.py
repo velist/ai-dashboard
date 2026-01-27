@@ -5,11 +5,17 @@
 自动从API获取数据，清洗后保存为JSON
 """
 
+import sys
+import io
 import requests
 import pandas as pd
 import json
 from datetime import datetime, timedelta
 from io import BytesIO
+
+# 设置标准输出编码为UTF-8（兼容Windows）
+if sys.platform == 'win32':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 # API配置
 API_URL = 'http://blchat.ksbao.com:8001/api/events/export_v2?type=xls'
