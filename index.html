@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI病例研习平台 - 数据仪表盘</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+
+    <!-- Flatpickr -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh.js"></script>
+
+    <style>
+        .kpi-card {
+            transition: all 0.3s ease;
+        }
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .chart-container {
+            min-height: 400px;
+        }
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3B82F6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .section-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .section-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+        .section-header:hover {
+            background-color: #f9fafb;
+        }
+        .section-content {
+            padding: 24px;
+        }
+        .trend-up {
+            color: #10B981;
+        }
+        .trend-down {
+            color: #EF4444;
+        }
+        .trend-neutral {
+            color: #6B7280;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold text-gray-900">AI病例研习平台 - 数据仪表盘</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="data-time-range" class="text-sm text-gray-500"></span>
+                    <button id="refresh-btn" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                        <span id="refresh-text">加载中...</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- 筛选控制面板 -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <h2 class="text-lg font-semibold text-gray-900 mb-4">数据筛选</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- 日期范围选择 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">日期范围</label>
+                    <input type="text" id="date-range-picker" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="选择日期范围">
+                </div>
+
+                <!-- 快捷日期选择 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">快捷选择</label>
+                    <select id="quick-date-select" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="7">最近7天</option>
+                        <option value="14">最近14天</option>
+                        <option value="30">最近30天</option>
+                    </select>
+                </div>
+
+                <!-- 用户类型筛选 -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">用户类型</label>
+                    <select id="user-type-filter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="all">全部用户</option>
+                        <option value="first">仅首次用户</option>
+                        <option value="returning">仅回访用户</option>
+                    </select>
+                </div>
+
+                <!-- 操作按钮 -->
+                <div class="flex items-end space-x-2">
+                    <button id="apply-filter-btn" class="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                        应用筛选
+                    </button>
+                    <button id="reset-filter-btn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                        重置
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 加载提示 -->
+        <div id="loading-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg p-6 flex flex-col items-center">
+                <div class="loading-spinner"></div>
+                <p class="mt-4 text-gray-600">加载数据中...</p>
+            </div>
+        </div>
+
+        <!-- KPI 关键指标卡片区 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <!-- 总用户数 -->
+            <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-sm font-medium text-gray-500">总用户数</h3>
+                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                </div>
+                <div class="flex items-end justify-between">
+                    <div>
+                        <p id="kpi-total-users" class="text-4xl font-bold text-gray-900">-</p>
+                        <p id="kpi-total-users-change" class="text-sm mt-1">-</p>
+                    </div>
+                    <div id="kpi-total-users-chart" style="width: 80px; height: 40px;"></div>
+                </div>
+            </div>
+
+            <!-- 进入问诊率 -->
+            <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-sm font-medium text-gray-500">进入问诊率</h3>
+                    <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                    </svg>
+                </div>
+                <div class="flex items-end justify-between">
+                    <div>
+                        <p id="kpi-enter-rate" class="text-4xl font-bold text-gray-900">-</p>
+                        <p id="kpi-enter-rate-change" class="text-sm mt-1">-</p>
+                    </div>
+                    <div id="kpi-enter-rate-chart" style="width: 80px; height: 40px;"></div>
+                </div>
+            </div>
+
+            <!-- 诊断行为率 -->
+            <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-sm font-medium text-gray-500">诊断行为率</h3>
+                    <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                    </svg>
+                </div>
+                <div class="flex items-end justify-between">
+                    <div>
+                        <p id="kpi-diagnosis-rate" class="text-4xl font-bold text-gray-900">-</p>
+                        <p id="kpi-diagnosis-rate-change" class="text-sm mt-1">-</p>
+                    </div>
+                    <div id="kpi-diagnosis-rate-chart" style="width: 80px; height: 40px;"></div>
+                </div>
+            </div>
+
+            <!-- 完成率 -->
+            <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-sm font-medium text-gray-500">完成率</h3>
+                    <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div class="flex items-end justify-between">
+                    <div>
+                        <p id="kpi-complete-rate" class="text-4xl font-bold text-gray-900">-</p>
+                        <p id="kpi-complete-rate-change" class="text-sm mt-1">-</p>
+                    </div>
+                    <div id="kpi-complete-rate-chart" style="width: 80px; height: 40px;"></div>
+                </div>
+            </div>
+
+            <!-- 次日留存率 -->
+            <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-sm font-medium text-gray-500">次日留存率</h3>
+                    <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                    </svg>
+                </div>
+                <div class="flex items-end justify-between">
+                    <div>
+                        <p id="kpi-retention-rate" class="text-4xl font-bold text-gray-900">-</p>
+                        <p id="kpi-retention-rate-change" class="text-sm mt-1">-</p>
+                    </div>
+                    <div id="kpi-retention-rate-chart" style="width: 80px; height: 40px;"></div>
+                </div>
+            </div>
+
+            <!-- 平台累计用户 -->
+            <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-sm font-medium text-gray-500">平台累计用户</h3>
+                    <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                </div>
+                <div class="flex items-end justify-between">
+                    <div>
+                        <p id="kpi-cumulative-users" class="text-4xl font-bold text-gray-900">-</p>
+                        <p id="kpi-cumulative-users-change" class="text-sm mt-1">-</p>
+                    </div>
+                    <div id="kpi-cumulative-users-chart" style="width: 80px; height: 40px;"></div>
+                </div>
+            </div>
+
+            <!-- 回访用户数 -->
+            <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-sm font-medium text-gray-500">回访用户数</h3>
+                    <svg class="w-5 h-5 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v16l4-2 4 2 4-2 4 2z"></path>
+                    </svg>
+                </div>
+                <div class="flex items-end justify-between">
+                    <div>
+                        <p id="kpi-returning-users" class="text-4xl font-bold text-gray-900">-</p>
+                        <p id="kpi-returning-users-change" class="text-sm mt-1">-</p>
+                    </div>
+                    <div id="kpi-returning-users-chart" style="width: 80px; height: 40px;"></div>
+                </div>
+            </div>
+
+            <!-- 首次用户数 -->
+            <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-sm font-medium text-gray-500">首次用户数</h3>
+                    <svg class="w-5 h-5 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                    </svg>
+                </div>
+                <div class="flex items-end justify-between">
+                    <div>
+                        <p id="kpi-first-users" class="text-4xl font-bold text-gray-900">-</p>
+                        <p id="kpi-first-users-change" class="text-sm mt-1">-</p>
+                    </div>
+                    <div id="kpi-first-users-chart" style="width: 80px; height: 40px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 转化漏斗分析 -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2 class="text-lg font-semibold text-gray-900">转化漏斗分析</h2>
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </div>
+            <div class="section-content">
+                <div id="funnel-chart" class="chart-container"></div>
+            </div>
+        </div>
+
+        <!-- 用户趋势分析 -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2 class="text-lg font-semibold text-gray-900">用户趋势分析</h2>
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </div>
+            <div class="section-content">
+                <div id="trend-chart" class="chart-container"></div>
+            </div>
+        </div>
+
+        <!-- 用户结构分析 -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2 class="text-lg font-semibold text-gray-900">用户结构分析</h2>
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </div>
+            <div class="section-content">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div id="user-type-chart" class="chart-container"></div>
+                    <div id="department-chart" class="chart-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 功能使用分析 -->
+        <div class="section-card">
+            <div class="section-header">
+                <h2 class="text-lg font-semibold text-gray-900">功能使用分析</h2>
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </div>
+            <div class="section-content">
+                <div id="feature-usage-chart" class="chart-container"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ==================== 配置常量 ====================
+        const DATA_JSON_URL = 'data/latest.json';
+
+        // 排除的测试ID列表（已在服务端清洗，此处保留作为参考）
+        const EXCLUDE_IDS = [
+            'trial-e5b50d8e-3856-49d4-8633-2a67f41923ce',
+            'trial-e21c6843-aea3-4910-ac71-9aff35dc91e1',
+            'trial-2b26b557-4022-44ad-9cb1-f58b3f495468',
+            'trial-2da1f8c6-6f9e-40a4-a528-73ffc3b448d5',
+            'trial-2f87736a-0290-42a7-b4a3-f613c97ae1d4',
+            'trial-7b89c5d1-1e5c-43ab-b3fd-639765f9673c',
+            'trial-ca39a16e-5bf4-4343-9a2e-4d9bfb2f958f',
+            'trial-0855ab37-8162-4796-ad94-a5c50d59496a',
+            'trial-958b9b91-bd45-4e1a-aadf-6f3b075cee26',
+            'trial-4e1078af-2d27-46f5-9ec0-f0d471739d9b',
+            'trial-4f494b3a-dc0c-4060-bfc9-0b668698e0ff',
+            'trial-b63973da-6d4c-4115-a2f1-6acf5c046895',
+            'trial-3d5b5e7c-987d-4046-be68-39c7ba6ca430',
+            'trial-abac2152-7833-40f0-8f65-b37de1456ee3',
+            'trial-0a91baac-888a-4d27-a7c5-8077c73389e1',
+            'trial-9396417e-5275-4449-98c0-e770d2c116a0',
+            'a277d75e-ffee-45ff-94bf-9a6026506444',
+            'da8106e5-2185-466e-bf6d-40ad88eeaa08',
+            '5808ec25-e74e-4d54-821c-891079f42de8',
+            '493a1fbb-d2d6-45a2-a161-3abea8d97265',
+            'a4cb4615-b699-4356-940b-010d739b1ea1',
+            '824c588c-a177-4737-95c6-9b94cb1aa5c9'
+        ];
+
+        // ==================== 全局变量 ====================
+        let rawData = [];
+        let currentData = [];
+        let lastWeekData = [];
+        let chartInstances = {};
+
+        // ==================== 工具函数 ====================
+
+        // 获取昨天的日期（23:59:59）
+        function getYesterday() {
+            const date = new Date();
+            date.setDate(date.getDate() - 1);
+            date.setHours(23, 59, 59, 999);
+            return date;
+        }
+
+        // 获取N天前的日期（00:00:00）
+        function getDaysAgo(days) {
+            const date = new Date();
+            date.setDate(date.getDate() - days);
+            date.setHours(0, 0, 0, 0);
+            return date;
+        }
+
+        // 格式化日期为 YYYY-MM-DD
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // 显示/隐藏加载提示
+        function showLoading(show) {
+            document.getElementById('loading-overlay').classList.toggle('hidden', !show);
+        }
+
+        // ==================== 数据加载 ====================
+
+        async function loadData() {
+            showLoading(true);
+            try {
+                const response = await fetch(DATA_JSON_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const jsonResponse = await response.json();
+                console.log('加载数据成功:', jsonResponse.dataCount, '条记录,', jsonResponse.userCount, '个用户');
+                console.log('数据更新时间:', jsonResponse.updateTime);
+
+                // 提取数据并转换时间格式
+                const jsonData = jsonResponse.data.map(row => ({
+                    ...row,
+                    time: new Date(row.time)  // 将ISO时间字符串转为Date对象
+                }));
+
+                rawData = jsonData;  // 数据已在服务端清洗，直接使用
+
+                // 显示数据更新时间
+                const updateTime = new Date(jsonResponse.updateTime);
+                const updateTimeStr = updateTime.toLocaleString('zh-CN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+                document.getElementById('refresh-text').textContent = `最后更新: ${updateTimeStr}`;
+
+                // 设置默认日期范围（昨天往前推7天）
+                const yesterday = getYesterday();
+                const sevenDaysAgo = getDaysAgo(8); // 往前推8天，获取7天数据
+
+                applyDefaultFilter(sevenDaysAgo, yesterday);
+
+            } catch (error) {
+                console.error('加载数据失败:', error);
+                alert('数据加载失败: ' + error.message);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // 数据清洗（已在服务端完成，此函数保留用于兼容性）
+        function cleanData(data) {
+            return data.filter(row => {
+                // 排除测试ID
+                if (EXCLUDE_IDS.includes(row.user_id)) {
+                    return false;
+                }
+                // 排除ksbaoUserId为空
+                if (!row.ksbaoUserId) {
+                    return false;
+                }
+                return true;
+            }).map(row => {
+                // 确保时间字段是Date对象
+                if (row.time && !(row.time instanceof Date)) {
+                    row.time = new Date(row.time);
+                }
+                return row;
+            });
+        }
+
+        // 应用默认筛选
+        function applyDefaultFilter(startDate, endDate) {
+            currentData = rawData.filter(row => {
+                return row.time >= startDate && row.time <= endDate;
+            });
+
+            // 加载上周数据用于对比
+            const lastWeekStart = new Date(startDate);
+            lastWeekStart.setDate(lastWeekStart.getDate() - 7);
+            const lastWeekEnd = new Date(endDate);
+            lastWeekEnd.setDate(lastWeekEnd.getDate() - 7);
+
+            lastWeekData = rawData.filter(row => {
+                return row.time >= lastWeekStart && row.time <= lastWeekEnd;
+            });
+
+            // 更新时间范围显示
+            document.getElementById('data-time-range').textContent =
+                `${formatDate(startDate)} 至 ${formatDate(endDate)}`;
+
+            // 初始化日期选择器
+            initDatePicker(startDate, endDate);
+
+            // 计算并渲染
+            calculateAndRender();
+        }
+
+        // ==================== 日期选择器初始化 ====================
+
+        function initDatePicker(startDate, endDate) {
+            flatpickr("#date-range-picker", {
+                mode: "range",
+                locale: "zh",
+                dateFormat: "Y-m-d",
+                defaultDate: [startDate, endDate],
+                onChange: function(selectedDates) {
+                    if (selectedDates.length === 2) {
+                        // 用户选择了日期范围，暂不自动应用
+                        console.log('日期范围已选择:', selectedDates);
+                    }
+                }
+            });
+        }
+
+        // ==================== 指标计算 ====================
+
+        function calculateMetrics(data) {
+            const totalUsers = new Set(data.map(r => r.user_id)).size;
+
+            // 识别element字段格式
+            const hasChineseElement = data.some(r => r.element && /[\u4e00-\u9fa5]/.test(r.element));
+
+            let guideUsers, enterChatUsers, diagnosisUsers, finishUsers, selectDeptUsers;
+
+            if (hasChineseElement) {
+                // 中文格式
+                guideUsers = new Set(data.filter(r => r.element === '引导页访问').map(r => r.user_id)).size;
+                selectDeptUsers = new Set(data.filter(r => r.element && r.element.includes('科室选择:')).map(r => r.user_id)).size;
+                enterChatUsers = new Set(data.filter(r => r.element === '问诊开始').map(r => r.user_id)).size;
+                diagnosisUsers = new Set(data.filter(r => r.element && (r.element.includes('诊断结论:') || r.element.includes('医生提问:'))).map(r => r.user_id)).size;
+                finishUsers = new Set(data.filter(r => r.element === '评分展示').map(r => r.user_id)).size;
+            } else {
+                // 英文格式
+                guideUsers = new Set(data.filter(r => r.element === 'come to home page').map(r => r.user_id)).size;
+                selectDeptUsers = new Set(data.filter(r => r.element && r.element.includes('select department')).map(r => r.user_id)).size;
+                enterChatUsers = new Set(data.filter(r => r.element === 'come to chat page').map(r => r.user_id)).size;
+                diagnosisUsers = new Set(data.filter(r => r.element === 'send message').map(r => r.user_id)).size;
+                finishUsers = new Set(data.filter(r => r.element === 'finish chat').map(r => r.user_id)).size;
+            }
+
+            // 用户分类
+            const firstTimeUserIds = new Set(data.filter(r => {
+                if (hasChineseElement) {
+                    return r.element && r.element.includes('科室选择:');
+                } else {
+                    return r.element && r.element.includes('select department');
+                }
+            }).map(r => r.user_id));
+
+            const enterChatUserIds = new Set(data.filter(r => {
+                if (hasChineseElement) {
+                    return r.element === '问诊开始';
+                } else {
+                    return r.element === 'come to chat page';
+                }
+            }).map(r => r.user_id));
+
+            const returningUserIds = new Set([...enterChatUserIds].filter(id => !firstTimeUserIds.has(id)));
+
+            return {
+                totalUsers,
+                guideUsers,
+                selectDeptUsers,
+                enterChatUsers,
+                diagnosisUsers,
+                finishUsers,
+                firstTimeUsers: firstTimeUserIds.size,
+                returningUsers: returningUserIds.size,
+                enterRate: totalUsers > 0 ? (enterChatUsers / totalUsers * 100).toFixed(1) : 0,
+                diagnosisRate: totalUsers > 0 ? (diagnosisUsers / totalUsers * 100).toFixed(1) : 0,
+                completeRate: totalUsers > 0 ? (finishUsers / totalUsers * 100).toFixed(1) : 0,
+            };
+        }
+
+        // 计算留存率
+        function calculateRetention(currentData, lastWeekData) {
+            if (lastWeekData.length === 0) return 0;
+
+            // 获取上周最后一天的用户
+            const lastDayOfLastWeek = new Date(Math.max(...lastWeekData.map(r => r.time.getTime())));
+            const lastDayStart = new Date(lastDayOfLastWeek);
+            lastDayStart.setHours(0, 0, 0, 0);
+            const lastDayEnd = new Date(lastDayOfLastWeek);
+            lastDayEnd.setHours(23, 59, 59, 999);
+
+            const lastDayUsers = new Set(
+                lastWeekData
+                    .filter(r => r.time >= lastDayStart && r.time <= lastDayEnd)
+                    .map(r => r.user_id)
+            );
+
+            if (lastDayUsers.size === 0) return 0;
+
+            // 这些用户在本周期回访的数量
+            const returnedUsers = new Set(
+                currentData
+                    .filter(r => lastDayUsers.has(r.user_id))
+                    .map(r => r.user_id)
+            );
+
+            return (returnedUsers.size / lastDayUsers.size * 100).toFixed(1);
+        }
+
+        // 计算平台累计用户
+        function calculateCumulativeUsers() {
+            return new Set(rawData.map(r => r.user_id)).size;
+        }
+
+        // ==================== 图表渲染 ====================
+
+        function calculateAndRender() {
+            const currentMetrics = calculateMetrics(currentData);
+            const lastWeekMetrics = calculateMetrics(lastWeekData);
+            const retentionRate = calculateRetention(currentData, lastWeekData);
+            const cumulativeUsers = calculateCumulativeUsers();
+
+            console.log('当前指标:', currentMetrics);
+            console.log('上周指标:', lastWeekMetrics);
+
+            // 更新KPI卡片
+            updateKPICards(currentMetrics, lastWeekMetrics, retentionRate, cumulativeUsers);
+
+            // 渲染图表
+            renderFunnelChart(currentMetrics);
+            renderTrendChart();
+            renderUserTypeChart(currentMetrics);
+            renderDepartmentChart();
+            renderFeatureUsageChart();
+        }
+
+        // 更新KPI卡片
+        function updateKPICards(current, last, retentionRate, cumulativeUsers) {
+            // 总用户数
+            updateKPICard('total-users', current.totalUsers, last.totalUsers);
+
+            // 进入问诊率
+            updateKPICard('enter-rate', current.enterRate + '%', last.enterRate + '%', true);
+
+            // 诊断行为率
+            updateKPICard('diagnosis-rate', current.diagnosisRate + '%', last.diagnosisRate + '%', true);
+
+            // 完成率
+            updateKPICard('complete-rate', current.completeRate + '%', last.completeRate + '%', true);
+
+            // 次日留存率
+            const lastRetention = calculateRetention(lastWeekData, []); // 简化处理
+            updateKPICard('retention-rate', retentionRate + '%', '0%', true);
+
+            // 平台累计用户
+            updateKPICard('cumulative-users', cumulativeUsers, cumulativeUsers);
+
+            // 回访用户数
+            updateKPICard('returning-users', current.returningUsers, last.returningUsers);
+
+            // 首次用户数
+            updateKPICard('first-users', current.firstTimeUsers, last.firstTimeUsers);
+        }
+
+        function updateKPICard(name, currentValue, lastValue, isPercentage = false) {
+            document.getElementById(`kpi-${name}`).textContent = currentValue;
+
+            const currentNum = parseFloat(currentValue);
+            const lastNum = parseFloat(lastValue);
+
+            if (lastNum > 0) {
+                const change = ((currentNum - lastNum) / lastNum * 100).toFixed(1);
+                const changeText = change > 0 ? `↑ ${change}%` : change < 0 ? `↓ ${Math.abs(change)}%` : '持平';
+                const changeClass = change > 0 ? 'trend-up' : change < 0 ? 'trend-down' : 'trend-neutral';
+
+                const changeElement = document.getElementById(`kpi-${name}-change`);
+                changeElement.textContent = `vs上周 ${changeText}`;
+                changeElement.className = `text-sm mt-1 ${changeClass}`;
+            } else {
+                const changeElement = document.getElementById(`kpi-${name}-change`);
+                changeElement.textContent = '暂无对比数据';
+                changeElement.className = 'text-sm mt-1 trend-neutral';
+            }
+
+            // 渲染迷你趋势图
+            renderMiniChart(`kpi-${name}-chart`, [lastNum, currentNum]);
+        }
+
+        // 渲染迷你趋势图
+        function renderMiniChart(elementId, data) {
+            const chartDom = document.getElementById(elementId);
+            if (!chartDom) return;
+
+            let chart = chartInstances[elementId];
+            if (!chart) {
+                chart = echarts.init(chartDom);
+                chartInstances[elementId] = chart;
+            }
+
+            const option = {
+                grid: { left: 0, right: 0, top: 0, bottom: 0 },
+                xAxis: { type: 'category', show: false },
+                yAxis: { type: 'value', show: false },
+                series: [{
+                    data: data,
+                    type: 'line',
+                    smooth: true,
+                    symbol: 'none',
+                    lineStyle: { width: 2, color: '#3B82F6' },
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: 'rgba(59, 130, 246, 0.3)' },
+                            { offset: 1, color: 'rgba(59, 130, 246, 0)' }
+                        ])
+                    }
+                }]
+            };
+
+            chart.setOption(option);
+        }
+
+        // 渲染转化漏斗图
+        function renderFunnelChart(metrics) {
+            const chartDom = document.getElementById('funnel-chart');
+            let chart = chartInstances['funnel-chart'];
+            if (!chart) {
+                chart = echarts.init(chartDom);
+                chartInstances['funnel-chart'] = chart;
+            }
+
+            const option = {
+                title: {
+                    text: '用户转化漏斗',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b} : {c}人 ({d}%)'
+                },
+                series: [{
+                    name: '转化漏斗',
+                    type: 'funnel',
+                    left: '10%',
+                    top: 60,
+                    bottom: 60,
+                    width: '80%',
+                    min: 0,
+                    max: metrics.totalUsers,
+                    minSize: '0%',
+                    maxSize: '100%',
+                    sort: 'descending',
+                    gap: 2,
+                    label: {
+                        show: true,
+                        position: 'inside',
+                        formatter: '{b}: {c}人'
+                    },
+                    labelLine: {
+                        length: 10,
+                        lineStyle: {
+                            width: 1,
+                            type: 'solid'
+                        }
+                    },
+                    itemStyle: {
+                        borderColor: '#fff',
+                        borderWidth: 1
+                    },
+                    emphasis: {
+                        label: {
+                            fontSize: 20
+                        }
+                    },
+                    data: [
+                        { value: metrics.guideUsers, name: '访问引导页' },
+                        { value: metrics.selectDeptUsers, name: '完成科室选择' },
+                        { value: metrics.enterChatUsers, name: '进入问诊' },
+                        { value: metrics.diagnosisUsers, name: '有诊断行为' },
+                        { value: metrics.finishUsers, name: '查看评分' }
+                    ]
+                }]
+            };
+
+            chart.setOption(option);
+        }
+
+        // 渲染用户趋势图
+        function renderTrendChart() {
+            const chartDom = document.getElementById('trend-chart');
+            let chart = chartInstances['trend-chart'];
+            if (!chart) {
+                chart = echarts.init(chartDom);
+                chartInstances['trend-chart'] = chart;
+            }
+
+            // 按日期分组统计
+            const dateMap = {};
+            currentData.forEach(row => {
+                const dateStr = formatDate(row.time);
+                if (!dateMap[dateStr]) {
+                    dateMap[dateStr] = new Set();
+                }
+                dateMap[dateStr].add(row.user_id);
+            });
+
+            const dates = Object.keys(dateMap).sort();
+            const dailyUsers = dates.map(date => dateMap[date].size);
+
+            const option = {
+                title: {
+                    text: '每日用户活跃趋势',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: ['活跃用户数'],
+                    top: 30
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: dates
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    name: '活跃用户数',
+                    type: 'line',
+                    smooth: true,
+                    data: dailyUsers,
+                    lineStyle: {
+                        color: '#3B82F6',
+                        width: 3
+                    },
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: 'rgba(59, 130, 246, 0.3)' },
+                            { offset: 1, color: 'rgba(59, 130, 246, 0.05)' }
+                        ])
+                    },
+                    itemStyle: {
+                        color: '#3B82F6'
+                    }
+                }]
+            };
+
+            chart.setOption(option);
+        }
+
+        // 渲染用户类型饼图
+        function renderUserTypeChart(metrics) {
+            const chartDom = document.getElementById('user-type-chart');
+            let chart = chartInstances['user-type-chart'];
+            if (!chart) {
+                chart = echarts.init(chartDom);
+                chartInstances['user-type-chart'] = chart;
+            }
+
+            const option = {
+                title: {
+                    text: '用户类型分布',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b}: {c}人 ({d}%)'
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    top: 'middle'
+                },
+                series: [{
+                    name: '用户类型',
+                    type: 'pie',
+                    radius: '60%',
+                    center: ['60%', '50%'],
+                    data: [
+                        { value: metrics.firstTimeUsers, name: '首次用户' },
+                        { value: metrics.returningUsers, name: '回访用户' }
+                    ],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    },
+                    label: {
+                        formatter: '{b}\n{c}人 ({d}%)'
+                    }
+                }]
+            };
+
+            chart.setOption(option);
+        }
+
+        // 渲染科室分布图
+        function renderDepartmentChart() {
+            const chartDom = document.getElementById('department-chart');
+            let chart = chartInstances['department-chart'];
+            if (!chart) {
+                chart = echarts.init(chartDom);
+                chartInstances['department-chart'] = chart;
+            }
+
+            // 统计科室分布
+            const hasChineseElement = currentData.some(r => r.element && /[\u4e00-\u9fa5]/.test(r.element));
+            let deptData = [];
+
+            if (hasChineseElement) {
+                const deptMap = {};
+                currentData.forEach(row => {
+                    if (row.element && row.element.includes('科室选择:')) {
+                        const dept = row.element.replace('科室选择:', '');
+                        deptMap[dept] = (deptMap[dept] || 0) + 1;
+                    }
+                });
+                deptData = Object.entries(deptMap)
+                    .map(([name, value]) => ({ name, value }))
+                    .sort((a, b) => b.value - a.value)
+                    .slice(0, 10);
+            } else {
+                // 英文格式
+                const deptMap = {};
+                currentData.forEach(row => {
+                    if (row.element && row.element.includes('select department')) {
+                        const dept = row.element.replace('select department: ', '');
+                        deptMap[dept] = (deptMap[dept] || 0) + 1;
+                    }
+                });
+                deptData = Object.entries(deptMap)
+                    .map(([name, value]) => ({ name, value }))
+                    .sort((a, b) => b.value - a.value)
+                    .slice(0, 10);
+            }
+
+            if (deptData.length === 0) {
+                deptData = [{ name: '暂无数据', value: 0 }];
+            }
+
+            const option = {
+                title: {
+                    text: 'Top 10 科室选择分布',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'value'
+                },
+                yAxis: {
+                    type: 'category',
+                    data: deptData.map(d => d.name).reverse()
+                },
+                series: [{
+                    type: 'bar',
+                    data: deptData.map(d => d.value).reverse(),
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                            { offset: 0, color: '#3B82F6' },
+                            { offset: 1, color: '#60A5FA' }
+                        ])
+                    },
+                    label: {
+                        show: true,
+                        position: 'right',
+                        formatter: '{c}次'
+                    }
+                }]
+            };
+
+            chart.setOption(option);
+        }
+
+        // 渲染功能使用分析图
+        function renderFeatureUsageChart() {
+            const chartDom = document.getElementById('feature-usage-chart');
+            let chart = chartInstances['feature-usage-chart'];
+            if (!chart) {
+                chart = echarts.init(chartDom);
+                chartInstances['feature-usage-chart'] = chart;
+            }
+
+            const hasChineseElement = currentData.some(r => r.element && /[\u4e00-\u9fa5]/.test(r.element));
+
+            let features = [];
+            if (hasChineseElement) {
+                features = [
+                    { name: '获取快捷提问', element: '获取快捷提问' },
+                    { name: '病例刷新', element: '病例刷新' },
+                    { name: '开启新病例', element: '开启新病例' },
+                    { name: '切换科室', element: '点击切换科室按钮' },
+                    { name: '点开个人中心', element: '点开个人中心' },
+                    { name: '开始研习按钮', element: '开始研习按钮' },
+                    { name: '跳过按钮', element: '跳过按钮' }
+                ];
+            } else {
+                // 英文格式的功能映射
+                features = [];
+            }
+
+            const totalUsers = calculateMetrics(currentData).totalUsers;
+            const featureData = features.map(feature => {
+                const users = new Set(currentData.filter(r => r.element === feature.element).map(r => r.user_id)).size;
+                const rate = totalUsers > 0 ? (users / totalUsers * 100).toFixed(1) : 0;
+                return {
+                    name: feature.name,
+                    users: users,
+                    rate: parseFloat(rate)
+                };
+            }).filter(f => f.users > 0).sort((a, b) => b.users - a.users);
+
+            if (featureData.length === 0) {
+                featureData.push({ name: '暂无数据', users: 0, rate: 0 });
+            }
+
+            const option = {
+                title: {
+                    text: '功能使用率统计',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    },
+                    formatter: '{b}<br/>使用人数: {c}人'
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'value'
+                },
+                yAxis: {
+                    type: 'category',
+                    data: featureData.map(d => d.name).reverse()
+                },
+                series: [{
+                    type: 'bar',
+                    data: featureData.map(d => d.users).reverse(),
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                            { offset: 0, color: '#10B981' },
+                            { offset: 1, color: '#34D399' }
+                        ])
+                    },
+                    label: {
+                        show: true,
+                        position: 'right',
+                        formatter: function(params) {
+                            const item = featureData[featureData.length - 1 - params.dataIndex];
+                            return `${item.users}人 (${item.rate}%)`;
+                        }
+                    }
+                }]
+            };
+
+            chart.setOption(option);
+        }
+
+        // ==================== 事件监听 ====================
+
+        // 刷新按钮
+        document.getElementById('refresh-btn').addEventListener('click', () => {
+            loadData();
+        });
+
+        // 应用筛选按钮
+        document.getElementById('apply-filter-btn').addEventListener('click', () => {
+            const dateRangePicker = document.getElementById('date-range-picker')._flatpickr;
+            const selectedDates = dateRangePicker.selectedDates;
+
+            if (selectedDates.length === 2) {
+                const startDate = selectedDates[0];
+                const endDate = selectedDates[1];
+
+                applyDefaultFilter(startDate, endDate);
+            } else {
+                alert('请选择完整的日期范围');
+            }
+        });
+
+        // 重置筛选按钮
+        document.getElementById('reset-filter-btn').addEventListener('click', () => {
+            const yesterday = getYesterday();
+            const sevenDaysAgo = getDaysAgo(8);
+            applyDefaultFilter(sevenDaysAgo, yesterday);
+        });
+
+        // 快捷日期选择
+        document.getElementById('quick-date-select').addEventListener('change', (e) => {
+            const days = parseInt(e.target.value);
+            const yesterday = getYesterday();
+            const startDate = getDaysAgo(days + 1);
+
+            const dateRangePicker = document.getElementById('date-range-picker')._flatpickr;
+            dateRangePicker.setDate([startDate, yesterday]);
+
+            applyDefaultFilter(startDate, yesterday);
+        });
+
+        // 用户类型筛选
+        document.getElementById('user-type-filter').addEventListener('change', (e) => {
+            // 这里可以添加用户类型筛选逻辑
+            console.log('用户类型筛选:', e.target.value);
+        });
+
+        // 响应式处理
+        window.addEventListener('resize', () => {
+            Object.values(chartInstances).forEach(chart => {
+                if (chart) {
+                    chart.resize();
+                }
+            });
+        });
+
+        // ==================== 页面加载 ====================
+
+        // 页面加载完成后自动加载数据
+        window.addEventListener('DOMContentLoaded', () => {
+            loadData();
+        });
+
+    </script>
+</body>
+</html>

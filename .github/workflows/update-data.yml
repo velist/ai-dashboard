@@ -1,0 +1,66 @@
+name: 更新数据
+
+on:
+  schedule:
+    # 每小时执行一次（整点）
+    - cron: '0 * * * *'
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 设置Python环境
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: 安装依赖
+        run: |
+          pip install --upgrade pip
+          pip install pandas requests openpyxl
+
+      - name: 创建数据目录
+        run: mkdir -p data
+
+      - name: 获取和清洗数据
+        run: python scripts/fetch_data.py
+
+      - name: 检查数据文件变化
+        id: check_changes
+        run: |
+          git add data/latest.json
+          if git diff --cached --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "数据未发生变化，跳过提交"
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "数据已更新，准备提交"
+          fi
+
+      - name: 提交数据变更
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "GitHub Actions Bot"
+          git add data/latest.json
+          git commit -m "🤖 自动更新数据 - $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          git push
+
+      - name: 清理历史文件（保留最近10个）
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          cd data
+          ls -t history_*.json | tail -n +11 | xargs -r rm
+          if [ -n "$(git status --porcelain)" ]; then
+            git add .
+            git commit -m "🗑️ 清理历史数据文件"
+            git push
+          fi
