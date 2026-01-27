@@ -90,11 +90,17 @@ def save_data(df):
     """保存数据为JSON"""
     print('\n开始保存数据...')
 
-    # 转换为JSON格式（处理时间字段）
+    # 转换为JSON格式（处理时间字段和NaN值）
     data_dict = df.to_dict('records')
     for record in data_dict:
+        # 处理时间字段
         if isinstance(record['time'], pd.Timestamp):
             record['time'] = record['time'].isoformat()
+
+        # 将 NaN 值替换为 None（JSON中的null）
+        for key, value in list(record.items()):
+            if pd.isna(value):
+                record[key] = None
 
     # 保存最新数据
     output_file = 'data/latest.json'
