@@ -62,13 +62,21 @@
             padding: 24px;
         }
         .trend-up {
-            color: #10B981;
+            color: #EF4444;
         }
         .trend-down {
-            color: #EF4444;
+            color: #10B981;
         }
         .trend-neutral {
             color: #6B7280;
+        }
+        .help-icon {
+            cursor: help;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+        .help-icon:hover {
+            opacity: 1;
         }
     </style>
 </head>
@@ -147,7 +155,12 @@
             <!-- 总用户数 -->
             <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
                 <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-sm font-medium text-gray-500">总用户数</h3>
+                    <div class="flex items-center space-x-2">
+                        <h3 class="text-sm font-medium text-gray-500">总用户数</h3>
+                        <svg onclick="showMetricHelp('total-users')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
                     <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
                     </svg>
@@ -164,7 +177,12 @@
             <!-- 进入问诊率 -->
             <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
                 <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-sm font-medium text-gray-500">进入问诊率</h3>
+                    <div class="flex items-center space-x-2">
+                        <h3 class="text-sm font-medium text-gray-500">进入问诊率</h3>
+                        <svg onclick="showMetricHelp('enter-rate')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
                     <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                     </svg>
@@ -181,7 +199,12 @@
             <!-- 诊断行为率 -->
             <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
                 <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-sm font-medium text-gray-500">诊断行为率</h3>
+                    <div class="flex items-center space-x-2">
+                        <h3 class="text-sm font-medium text-gray-500">诊断行为率</h3>
+                        <svg onclick="showMetricHelp('diagnosis-rate')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
                     <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                     </svg>
@@ -198,7 +221,12 @@
             <!-- 完成率 -->
             <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
                 <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-sm font-medium text-gray-500">完成率</h3>
+                    <div class="flex items-center space-x-2">
+                        <h3 class="text-sm font-medium text-gray-500">完成率</h3>
+                        <svg onclick="showMetricHelp('complete-rate')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
                     <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
@@ -215,7 +243,12 @@
             <!-- 次日留存率 -->
             <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
                 <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-sm font-medium text-gray-500">次日留存率</h3>
+                    <div class="flex items-center space-x-2">
+                        <h3 class="text-sm font-medium text-gray-500">次日留存率</h3>
+                        <svg onclick="showMetricHelp('retention-rate')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
                     <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                     </svg>
@@ -232,7 +265,12 @@
             <!-- 平台累计用户 -->
             <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
                 <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-sm font-medium text-gray-500">平台累计用户</h3>
+                    <div class="flex items-center space-x-2">
+                        <h3 class="text-sm font-medium text-gray-500">平台累计用户</h3>
+                        <svg onclick="showMetricHelp('cumulative-users')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
                     <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                     </svg>
@@ -249,7 +287,12 @@
             <!-- 回访用户数 -->
             <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
                 <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-sm font-medium text-gray-500">回访用户数</h3>
+                    <div class="flex items-center space-x-2">
+                        <h3 class="text-sm font-medium text-gray-500">回访用户数</h3>
+                        <svg onclick="showMetricHelp('returning-users')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
                     <svg class="w-5 h-5 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v16l4-2 4 2 4-2 4 2z"></path>
                     </svg>
@@ -266,7 +309,12 @@
             <!-- 首次用户数 -->
             <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
                 <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-sm font-medium text-gray-500">首次用户数</h3>
+                    <div class="flex items-center space-x-2">
+                        <h3 class="text-sm font-medium text-gray-500">首次用户数</h3>
+                        <svg onclick="showMetricHelp('first-users')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
                     <svg class="w-5 h-5 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
                     </svg>
@@ -447,6 +495,25 @@
         let chartInstances = {};
 
         // ==================== 工具函数 ====================
+
+        // 显示指标说明
+        function showMetricHelp(metricName) {
+            const descriptions = {
+                'total-users': '统计时间范围内有活动记录的独立用户数量（去重后的user_id数量）',
+                'enter-rate': '进入问诊的用户数 / 总用户数 × 100%。衡量用户从引导页到问诊页的转化率',
+                'diagnosis-rate': '有诊断行为的用户数 / 总用户数 × 100%。诊断行为包括：发送消息、查看诊断结论等',
+                'complete-rate': '查看评分页面的用户数 / 总用户数 × 100%。衡量完整完成问诊流程的用户比例',
+                'retention-rate': '昨天活跃用户中，今天再次访问的用户占比。计算方式：今天回访的昨日用户数 / 昨天总用户数 × 100%',
+                'cumulative-users': '从平台上线至今，所有历史数据中的独立用户总数（包含所有时间段的用户去重）',
+                'returning-users': '时间范围内，进入问诊但未完成科室选择的用户数。通常为老用户直接访问问诊页',
+                'first-users': '时间范围内，完成科室选择的用户数。通常为首次访问的新用户'
+            };
+
+            const description = descriptions[metricName] || '暂无说明';
+            alert(`📊 指标说明\n\n${description}`);
+        }
+
+        // ====================
 
         // 获取昨天的日期（23:59:59）
         function getYesterday() {
@@ -637,6 +704,46 @@
 
             const returningUserIds = new Set([...enterChatUserIds].filter(id => !firstTimeUserIds.has(id)));
 
+            // 计算新用户漏斗数据
+            const newUserGuide = new Set(data.filter(r => {
+                const isGuide = hasChineseElement ? r.element === '引导页访问' : r.element === 'come to home page';
+                return isGuide && firstTimeUserIds.has(r.user_id);
+            }).map(r => r.user_id)).size;
+
+            const newUserSelectDept = firstTimeUserIds.size;
+
+            const newUserEnterChat = new Set(data.filter(r => {
+                const isEnterChat = hasChineseElement ? r.element === '问诊开始' : r.element === 'come to chat page';
+                return isEnterChat && firstTimeUserIds.has(r.user_id);
+            }).map(r => r.user_id)).size;
+
+            const newUserDiagnosis = new Set(data.filter(r => {
+                const isDiagnosis = hasChineseElement ?
+                    (r.element && (r.element.includes('诊断结论:') || r.element.includes('医生提问:'))) :
+                    r.element === 'send message';
+                return isDiagnosis && firstTimeUserIds.has(r.user_id);
+            }).map(r => r.user_id)).size;
+
+            const newUserFinish = new Set(data.filter(r => {
+                const isFinish = hasChineseElement ? r.element === '评分展示' : r.element === 'finish chat';
+                return isFinish && firstTimeUserIds.has(r.user_id);
+            }).map(r => r.user_id)).size;
+
+            // 计算老用户漏斗数据
+            const returningUserEnterChat = returningUserIds.size;
+
+            const returningUserDiagnosis = new Set(data.filter(r => {
+                const isDiagnosis = hasChineseElement ?
+                    (r.element && (r.element.includes('诊断结论:') || r.element.includes('医生提问:'))) :
+                    r.element === 'send message';
+                return isDiagnosis && returningUserIds.has(r.user_id);
+            }).map(r => r.user_id)).size;
+
+            const returningUserFinish = new Set(data.filter(r => {
+                const isFinish = hasChineseElement ? r.element === '评分展示' : r.element === 'finish chat';
+                return isFinish && returningUserIds.has(r.user_id);
+            }).map(r => r.user_id)).size;
+
             return {
                 totalUsers,
                 guideUsers,
@@ -649,36 +756,65 @@
                 enterRate: totalUsers > 0 ? (enterChatUsers / totalUsers * 100).toFixed(1) : 0,
                 diagnosisRate: totalUsers > 0 ? (diagnosisUsers / totalUsers * 100).toFixed(1) : 0,
                 completeRate: totalUsers > 0 ? (finishUsers / totalUsers * 100).toFixed(1) : 0,
+                // 新用户漏斗数据
+                newUserFunnel: {
+                    guide: newUserGuide,
+                    selectDept: newUserSelectDept,
+                    enterChat: newUserEnterChat,
+                    diagnosis: newUserDiagnosis,
+                    finish: newUserFinish
+                },
+                // 老用户漏斗数据
+                returningUserFunnel: {
+                    enterChat: returningUserEnterChat,
+                    diagnosis: returningUserDiagnosis,
+                    finish: returningUserFinish
+                }
             };
         }
 
-        // 计算留存率
+        // 计算留存率（次日留存：昨天活跃用户中，今天再次访问的用户占比）
         function calculateRetention(currentData, lastWeekData) {
-            if (lastWeekData.length === 0) return 0;
+            if (currentData.length === 0) return 0;
 
-            // 获取上周最后一天的用户
-            const lastDayOfLastWeek = new Date(Math.max(...lastWeekData.map(r => r.time.getTime())));
-            const lastDayStart = new Date(lastDayOfLastWeek);
-            lastDayStart.setHours(0, 0, 0, 0);
-            const lastDayEnd = new Date(lastDayOfLastWeek);
-            lastDayEnd.setHours(23, 59, 59, 999);
+            // 获取当前数据范围的最后一天（今天）和倒数第二天（昨天）
+            const allTimes = currentData.map(r => r.time.getTime());
+            const maxTime = Math.max(...allTimes);
 
-            const lastDayUsers = new Set(
-                lastWeekData
-                    .filter(r => r.time >= lastDayStart && r.time <= lastDayEnd)
-                    .map(r => r.user_id)
-            );
+            // 今天的时间范围
+            const todayEnd = new Date(maxTime);
+            todayEnd.setHours(23, 59, 59, 999);
+            const todayStart = new Date(maxTime);
+            todayStart.setHours(0, 0, 0, 0);
 
-            if (lastDayUsers.size === 0) return 0;
+            // 昨天的时间范围
+            const yesterdayEnd = new Date(todayStart);
+            yesterdayEnd.setMilliseconds(-1); // 昨天的最后一毫秒
+            const yesterdayStart = new Date(yesterdayEnd);
+            yesterdayStart.setHours(0, 0, 0, 0);
 
-            // 这些用户在本周期回访的数量
-            const returnedUsers = new Set(
+            // 昨天活跃的用户
+            const yesterdayUsers = new Set(
                 currentData
-                    .filter(r => lastDayUsers.has(r.user_id))
+                    .filter(r => r.time >= yesterdayStart && r.time <= yesterdayEnd)
                     .map(r => r.user_id)
             );
 
-            return (returnedUsers.size / lastDayUsers.size * 100).toFixed(1);
+            if (yesterdayUsers.size === 0) return 0;
+
+            // 今天活跃的用户
+            const todayUsers = new Set(
+                currentData
+                    .filter(r => r.time >= todayStart && r.time <= todayEnd)
+                    .map(r => r.user_id)
+            );
+
+            // 昨天的用户中，今天回访的数量
+            const returnedUsers = new Set(
+                [...yesterdayUsers].filter(userId => todayUsers.has(userId))
+            );
+
+            return (returnedUsers.size / yesterdayUsers.size * 100).toFixed(1);
         }
 
         // 计算平台累计用户
@@ -793,7 +929,7 @@
             chart.setOption(option);
         }
 
-        // 渲染转化漏斗图
+        // 渲染转化漏斗图（新用户和老用户分开）
         function renderFunnelChart(metrics) {
             const chartDom = document.getElementById('funnel-chart');
             let chart = chartInstances['funnel-chart'];
@@ -803,56 +939,157 @@
             }
 
             const option = {
-                title: {
-                    text: '用户转化漏斗',
-                    left: 'center'
-                },
+                title: [
+                    {
+                        text: '新用户转化漏斗',
+                        left: '25%',
+                        textAlign: 'center',
+                        top: 10,
+                        textStyle: {
+                            fontSize: 16,
+                            fontWeight: 'bold'
+                        }
+                    },
+                    {
+                        text: '老用户转化漏斗',
+                        left: '75%',
+                        textAlign: 'center',
+                        top: 10,
+                        textStyle: {
+                            fontSize: 16,
+                            fontWeight: 'bold'
+                        }
+                    }
+                ],
                 tooltip: {
                     trigger: 'item',
-                    formatter: '{a} <br/>{b} : {c}人 ({d}%)'
+                    formatter: function(params) {
+                        const percent = ((params.value / params.data.total) * 100).toFixed(1);
+                        return `${params.seriesName}<br/>${params.name}: ${params.value}人 (${percent}%)`;
+                    }
                 },
-                series: [{
-                    name: '转化漏斗',
-                    type: 'funnel',
-                    left: '10%',
-                    top: 60,
-                    bottom: 60,
-                    width: '80%',
-                    min: 0,
-                    max: metrics.totalUsers,
-                    minSize: '0%',
-                    maxSize: '100%',
-                    sort: 'descending',
-                    gap: 2,
-                    label: {
-                        show: true,
-                        position: 'inside',
-                        formatter: '{b}: {c}人'
-                    },
-                    labelLine: {
-                        length: 10,
-                        lineStyle: {
-                            width: 1,
-                            type: 'solid'
-                        }
-                    },
-                    itemStyle: {
-                        borderColor: '#fff',
-                        borderWidth: 1
-                    },
-                    emphasis: {
+                series: [
+                    {
+                        name: '新用户',
+                        type: 'funnel',
+                        left: '5%',
+                        top: 60,
+                        bottom: 60,
+                        width: '40%',
+                        min: 0,
+                        max: metrics.newUserFunnel.guide || metrics.newUserFunnel.selectDept,
+                        minSize: '0%',
+                        maxSize: '100%',
+                        sort: 'descending',
+                        gap: 2,
                         label: {
-                            fontSize: 20
-                        }
+                            show: true,
+                            position: 'inside',
+                            formatter: '{b}: {c}人',
+                            fontSize: 12
+                        },
+                        labelLine: {
+                            length: 10,
+                            lineStyle: {
+                                width: 1,
+                                type: 'solid'
+                            }
+                        },
+                        itemStyle: {
+                            borderColor: '#fff',
+                            borderWidth: 1
+                        },
+                        emphasis: {
+                            label: {
+                                fontSize: 16
+                            }
+                        },
+                        data: [
+                            {
+                                value: metrics.newUserFunnel.guide || metrics.newUserFunnel.selectDept,
+                                name: '访问引导页',
+                                total: metrics.newUserFunnel.guide || metrics.newUserFunnel.selectDept
+                            },
+                            {
+                                value: metrics.newUserFunnel.selectDept,
+                                name: '完成科室选择',
+                                total: metrics.newUserFunnel.guide || metrics.newUserFunnel.selectDept
+                            },
+                            {
+                                value: metrics.newUserFunnel.enterChat,
+                                name: '进入问诊',
+                                total: metrics.newUserFunnel.guide || metrics.newUserFunnel.selectDept
+                            },
+                            {
+                                value: metrics.newUserFunnel.diagnosis,
+                                name: '有诊断行为',
+                                total: metrics.newUserFunnel.guide || metrics.newUserFunnel.selectDept
+                            },
+                            {
+                                value: metrics.newUserFunnel.finish,
+                                name: '查看评分',
+                                total: metrics.newUserFunnel.guide || metrics.newUserFunnel.selectDept
+                            }
+                        ]
                     },
-                    data: [
-                        { value: metrics.guideUsers, name: '访问引导页' },
-                        { value: metrics.selectDeptUsers, name: '完成科室选择' },
-                        { value: metrics.enterChatUsers, name: '进入问诊' },
-                        { value: metrics.diagnosisUsers, name: '有诊断行为' },
-                        { value: metrics.finishUsers, name: '查看评分' }
-                    ]
-                }]
+                    {
+                        name: '老用户',
+                        type: 'funnel',
+                        left: '55%',
+                        top: 60,
+                        bottom: 60,
+                        width: '40%',
+                        min: 0,
+                        max: metrics.returningUserFunnel.enterChat,
+                        minSize: '0%',
+                        maxSize: '100%',
+                        sort: 'descending',
+                        gap: 2,
+                        label: {
+                            show: true,
+                            position: 'inside',
+                            formatter: '{b}: {c}人',
+                            fontSize: 12
+                        },
+                        labelLine: {
+                            length: 10,
+                            lineStyle: {
+                                width: 1,
+                                type: 'solid'
+                            }
+                        },
+                        itemStyle: {
+                            borderColor: '#fff',
+                            borderWidth: 1,
+                            color: function(params) {
+                                const colors = ['#91cc75', '#fac858', '#ee6666'];
+                                return colors[params.dataIndex];
+                            }
+                        },
+                        emphasis: {
+                            label: {
+                                fontSize: 16
+                            }
+                        },
+                        data: [
+                            {
+                                value: metrics.returningUserFunnel.enterChat,
+                                name: '进入问诊',
+                                total: metrics.returningUserFunnel.enterChat
+                            },
+                            {
+                                value: metrics.returningUserFunnel.diagnosis,
+                                name: '有诊断行为',
+                                total: metrics.returningUserFunnel.enterChat
+                            },
+                            {
+                                value: metrics.returningUserFunnel.finish,
+                                name: '查看评分',
+                                total: metrics.returningUserFunnel.enterChat
+                            }
+                        ]
+                    }
+                ]
             };
 
             chart.setOption(option);
