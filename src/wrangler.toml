@@ -1,0 +1,7 @@
+name = "ai-dashboard-proxy"
+main = "ai-proxy-worker.js"
+compatibility_date = "2024-01-01"
+
+# 环境变量（部署时会配置）
+[vars]
+# SILICONFLOW_API_KEY 将通过命令行设置，不在此文件中明文存储
