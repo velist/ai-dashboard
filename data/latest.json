@@ -1,12 +1,26 @@
 {
-  "updateTime": "2026-01-27T11:53:10.264978",
-  "dataCount": 2104,
+  "updateTime": "2026-01-27T05:38:57.771047",
+  "dataCount": 2105,
   "userCount": 477,
   "timeRange": {
     "start": "2026-01-07T19:05:15",
-    "end": "2026-01-27T11:35:28"
+    "end": "2026-01-27T12:24:54"
   },
   "data": [
+    {
+      "user_id": "57d2dcde-e87d-41f2-b45f-e8c5c7523766",
+      "ksbaoUserId": 512343593.0,
+      "module": "问诊页面",
+      "action_type": "enter",
+      "element": "问诊开始",
+      "status": "success",
+      "trial": 0,
+      "is_vip": false,
+      "subject": "PD-NOTE-301",
+      "km": "全科医学(中级)［代码：301］",
+      "provider": "ksbao",
+      "time": "2026-01-27T12:24:54"
+    },
     {
       "user_id": "1daddb8f-74e2-44a1-9008-e00e1b9d49f5",
       "ksbaoUserId": 504049320.0,
