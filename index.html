@@ -773,48 +773,57 @@
             };
         }
 
-        // 计算留存率（次日留存：昨天活跃用户中，今天再次访问的用户占比）
+        // 计算留存率（次日留存：整个时间段内相邻日期的平均留存率）
         function calculateRetention(currentData, lastWeekData) {
             if (currentData.length === 0) return 0;
 
-            // 获取当前数据范围的最后一天（今天）和倒数第二天（昨天）
-            const allTimes = currentData.map(r => r.time.getTime());
-            const maxTime = Math.max(...allTimes);
+            // 按日期分组用户活动
+            const usersByDate = {};
+            currentData.forEach(r => {
+                const dateKey = r.time.toISOString().split('T')[0]; // YYYY-MM-DD
+                if (!usersByDate[dateKey]) {
+                    usersByDate[dateKey] = new Set();
+                }
+                usersByDate[dateKey].add(r.user_id);
+            });
 
-            // 今天的时间范围
-            const todayEnd = new Date(maxTime);
-            todayEnd.setHours(23, 59, 59, 999);
-            const todayStart = new Date(maxTime);
-            todayStart.setHours(0, 0, 0, 0);
+            // 获取所有日期并排序
+            const dates = Object.keys(usersByDate).sort();
 
-            // 昨天的时间范围
-            const yesterdayEnd = new Date(todayStart);
-            yesterdayEnd.setMilliseconds(-1); // 昨天的最后一毫秒
-            const yesterdayStart = new Date(yesterdayEnd);
-            yesterdayStart.setHours(0, 0, 0, 0);
+            if (dates.length < 2) {
+                return 0; // 需要至少2天的数据才能计算留存
+            }
 
-            // 昨天活跃的用户
-            const yesterdayUsers = new Set(
-                currentData
-                    .filter(r => r.time >= yesterdayStart && r.time <= yesterdayEnd)
-                    .map(r => r.user_id)
-            );
+            // 计算每对相邻日期的留存率
+            const retentionRates = [];
+            for (let i = 0; i < dates.length - 1; i++) {
+                const today = dates[i];
+                const tomorrow = dates[i + 1];
 
-            if (yesterdayUsers.size === 0) return 0;
+                const todayUsers = usersByDate[today];
+                const tomorrowUsers = usersByDate[tomorrow];
 
-            // 今天活跃的用户
-            const todayUsers = new Set(
-                currentData
-                    .filter(r => r.time >= todayStart && r.time <= todayEnd)
-                    .map(r => r.user_id)
-            );
+                // 今天的用户中，明天回访的数量
+                const returnedCount = [...todayUsers].filter(userId => tomorrowUsers.has(userId)).length;
 
-            // 昨天的用户中，今天回访的数量
-            const returnedUsers = new Set(
-                [...yesterdayUsers].filter(userId => todayUsers.has(userId))
-            );
+                if (todayUsers.size > 0) {
+                    const rate = (returnedCount / todayUsers.size) * 100;
+                    retentionRates.push(rate);
+                }
+            }
 
-            return (returnedUsers.size / yesterdayUsers.size * 100).toFixed(1);
+            // 返回平均留存率
+            if (retentionRates.length === 0) return 0;
+            const avgRate = retentionRates.reduce((sum, rate) => sum + rate, 0) / retentionRates.length;
+
+            console.log('次日留存率计算:', {
+                日期范围: `${dates[0]} 至 ${dates[dates.length - 1]}`,
+                相邻日期对数: retentionRates.length,
+                各日留存率: retentionRates.map(r => r.toFixed(1) + '%'),
+                平均留存率: avgRate.toFixed(1) + '%'
+            });
+
+            return avgRate.toFixed(1);
         }
 
         // 计算平台累计用户
@@ -859,8 +868,8 @@
             updateKPICard('complete-rate', current.completeRate + '%', last.completeRate + '%', true);
 
             // 次日留存率
-            const lastRetention = calculateRetention(lastWeekData, []); // 简化处理
-            updateKPICard('retention-rate', retentionRate + '%', '0%', true);
+            const lastRetention = calculateRetention(lastWeekData, []);
+            updateKPICard('retention-rate', retentionRate + '%', lastRetention + '%', true);
 
             // 平台累计用户
             updateKPICard('cumulative-users', cumulativeUsers, cumulativeUsers);
