@@ -151,180 +151,190 @@
         </div>
 
         <!-- KPI 关键指标卡片区 -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-            <!-- 总用户数 -->
-            <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="flex items-center space-x-2">
-                        <h3 class="text-sm font-medium text-gray-500">总用户数</h3>
-                        <svg onclick="showMetricHelp('total-users')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        <!-- 时间范围指标 -->
+        <div class="mb-4">
+            <h3 class="text-sm font-medium text-gray-600 mb-3 px-1">时间范围指标</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- 活跃用户数 -->
+                <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-2">
+                            <h3 class="text-sm font-medium text-gray-500">活跃用户数</h3>
+                            <svg onclick="showMetricHelp('total-users')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
                         </svg>
                     </div>
-                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                    </svg>
-                </div>
-                <div class="flex items-end justify-between">
-                    <div>
-                        <p id="kpi-total-users" class="text-4xl font-bold text-gray-900">-</p>
-                        <p id="kpi-total-users-change" class="text-sm mt-1">-</p>
+                    <div class="flex items-end justify-between">
+                        <div>
+                            <p id="kpi-total-users" class="text-4xl font-bold text-gray-900">-</p>
+                            <p id="kpi-total-users-change" class="text-sm mt-1">-</p>
+                        </div>
+                        <div id="kpi-total-users-chart" style="width: 80px; height: 40px;"></div>
                     </div>
-                    <div id="kpi-total-users-chart" style="width: 80px; height: 40px;"></div>
+                </div>
+
+                <!-- 新用户数 -->
+                <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-2">
+                            <h3 class="text-sm font-medium text-gray-500">新用户数</h3>
+                            <svg onclick="showMetricHelp('first-users')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <svg class="w-5 h-5 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                        </svg>
+                    </div>
+                    <div class="flex items-end justify-between">
+                        <div>
+                            <p id="kpi-first-users" class="text-4xl font-bold text-gray-900">-</p>
+                            <p id="kpi-first-users-change" class="text-sm mt-1">-</p>
+                        </div>
+                        <div id="kpi-first-users-chart" style="width: 80px; height: 40px;"></div>
+                    </div>
+                </div>
+
+                <!-- 回访用户数 -->
+                <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-2">
+                            <h3 class="text-sm font-medium text-gray-500">回访用户数</h3>
+                            <svg onclick="showMetricHelp('returning-users')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <svg class="w-5 h-5 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v16l4-2 4 2 4-2 4 2z"></path>
+                        </svg>
+                    </div>
+                    <div class="flex items-end justify-between">
+                        <div>
+                            <p id="kpi-returning-users" class="text-4xl font-bold text-gray-900">-</p>
+                            <p id="kpi-returning-users-change" class="text-sm mt-1">-</p>
+                        </div>
+                        <div id="kpi-returning-users-chart" style="width: 80px; height: 40px;"></div>
+                    </div>
+                </div>
+
+                <!-- 进入问诊率 -->
+                <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-2">
+                            <h3 class="text-sm font-medium text-gray-500">进入问诊率</h3>
+                            <svg onclick="showMetricHelp('enter-rate')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                    </div>
+                    <div class="flex items-end justify-between">
+                        <div>
+                            <p id="kpi-enter-rate" class="text-4xl font-bold text-gray-900">-</p>
+                            <p id="kpi-enter-rate-change" class="text-sm mt-1">-</p>
+                        </div>
+                        <div id="kpi-enter-rate-chart" style="width: 80px; height: 40px;"></div>
+                    </div>
+                </div>
+
+                <!-- 活跃率 -->
+                <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-2">
+                            <h3 class="text-sm font-medium text-gray-500">活跃率</h3>
+                            <svg onclick="showMetricHelp('diagnosis-rate')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <div class="flex items-end justify-between">
+                        <div>
+                            <p id="kpi-diagnosis-rate" class="text-4xl font-bold text-gray-900">-</p>
+                            <p id="kpi-diagnosis-rate-change" class="text-sm mt-1">-</p>
+                        </div>
+                        <div id="kpi-diagnosis-rate-chart" style="width: 80px; height: 40px;"></div>
+                    </div>
+                </div>
+
+                <!-- 完成率 -->
+                <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-2">
+                            <h3 class="text-sm font-medium text-gray-500">完成率</h3>
+                            <svg onclick="showMetricHelp('complete-rate')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="flex items-end justify-between">
+                        <div>
+                            <p id="kpi-complete-rate" class="text-4xl font-bold text-gray-900">-</p>
+                            <p id="kpi-complete-rate-change" class="text-sm mt-1">-</p>
+                        </div>
+                        <div id="kpi-complete-rate-chart" style="width: 80px; height: 40px;"></div>
+                    </div>
+                </div>
+
+                <!-- 次日留存率 -->
+                <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-2">
+                            <h3 class="text-sm font-medium text-gray-500">次日留存率</h3>
+                            <svg onclick="showMetricHelp('retention-rate')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="flex items-end justify-between">
+                        <div>
+                            <p id="kpi-retention-rate" class="text-4xl font-bold text-gray-900">-</p>
+                            <p id="kpi-retention-rate-change" class="text-sm mt-1">-</p>
+                        </div>
+                        <div id="kpi-retention-rate-chart" style="width: 80px; height: 40px;"></div>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <!-- 进入问诊率 -->
-            <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="flex items-center space-x-2">
-                        <h3 class="text-sm font-medium text-gray-500">进入问诊率</h3>
-                        <svg onclick="showMetricHelp('enter-rate')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        <!-- 累计统计指标 -->
+        <div class="mb-6">
+            <h3 class="text-sm font-medium text-gray-600 mb-3 px-1">累计统计指标</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- 平台累计用户 -->
+                <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center space-x-2">
+                            <h3 class="text-sm font-medium text-gray-500">平台累计用户</h3>
+                            <svg onclick="showMetricHelp('cumulative-users')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
                     </div>
-                    <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                    </svg>
-                </div>
-                <div class="flex items-end justify-between">
-                    <div>
-                        <p id="kpi-enter-rate" class="text-4xl font-bold text-gray-900">-</p>
-                        <p id="kpi-enter-rate-change" class="text-sm mt-1">-</p>
+                    <div class="flex items-end justify-between">
+                        <div>
+                            <p id="kpi-cumulative-users" class="text-4xl font-bold text-gray-900">-</p>
+                            <p id="kpi-cumulative-users-change" class="text-sm mt-1">-</p>
+                        </div>
+                        <div id="kpi-cumulative-users-chart" style="width: 80px; height: 40px;"></div>
                     </div>
-                    <div id="kpi-enter-rate-chart" style="width: 80px; height: 40px;"></div>
-                </div>
-            </div>
-
-            <!-- 诊断行为率 -->
-            <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="flex items-center space-x-2">
-                        <h3 class="text-sm font-medium text-gray-500">诊断行为率</h3>
-                        <svg onclick="showMetricHelp('diagnosis-rate')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                    </svg>
-                </div>
-                <div class="flex items-end justify-between">
-                    <div>
-                        <p id="kpi-diagnosis-rate" class="text-4xl font-bold text-gray-900">-</p>
-                        <p id="kpi-diagnosis-rate-change" class="text-sm mt-1">-</p>
-                    </div>
-                    <div id="kpi-diagnosis-rate-chart" style="width: 80px; height: 40px;"></div>
-                </div>
-            </div>
-
-            <!-- 完成率 -->
-            <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="flex items-center space-x-2">
-                        <h3 class="text-sm font-medium text-gray-500">完成率</h3>
-                        <svg onclick="showMetricHelp('complete-rate')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                </div>
-                <div class="flex items-end justify-between">
-                    <div>
-                        <p id="kpi-complete-rate" class="text-4xl font-bold text-gray-900">-</p>
-                        <p id="kpi-complete-rate-change" class="text-sm mt-1">-</p>
-                    </div>
-                    <div id="kpi-complete-rate-chart" style="width: 80px; height: 40px;"></div>
-                </div>
-            </div>
-
-            <!-- 次日留存率 -->
-            <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="flex items-center space-x-2">
-                        <h3 class="text-sm font-medium text-gray-500">次日留存率</h3>
-                        <svg onclick="showMetricHelp('retention-rate')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                    </svg>
-                </div>
-                <div class="flex items-end justify-between">
-                    <div>
-                        <p id="kpi-retention-rate" class="text-4xl font-bold text-gray-900">-</p>
-                        <p id="kpi-retention-rate-change" class="text-sm mt-1">-</p>
-                    </div>
-                    <div id="kpi-retention-rate-chart" style="width: 80px; height: 40px;"></div>
-                </div>
-            </div>
-
-            <!-- 平台累计用户 -->
-            <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="flex items-center space-x-2">
-                        <h3 class="text-sm font-medium text-gray-500">平台累计用户</h3>
-                        <svg onclick="showMetricHelp('cumulative-users')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                    </svg>
-                </div>
-                <div class="flex items-end justify-between">
-                    <div>
-                        <p id="kpi-cumulative-users" class="text-4xl font-bold text-gray-900">-</p>
-                        <p id="kpi-cumulative-users-change" class="text-sm mt-1">-</p>
-                    </div>
-                    <div id="kpi-cumulative-users-chart" style="width: 80px; height: 40px;"></div>
-                </div>
-            </div>
-
-            <!-- 回访用户数 -->
-            <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="flex items-center space-x-2">
-                        <h3 class="text-sm font-medium text-gray-500">回访用户数</h3>
-                        <svg onclick="showMetricHelp('returning-users')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <svg class="w-5 h-5 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v16l4-2 4 2 4-2 4 2z"></path>
-                    </svg>
-                </div>
-                <div class="flex items-end justify-between">
-                    <div>
-                        <p id="kpi-returning-users" class="text-4xl font-bold text-gray-900">-</p>
-                        <p id="kpi-returning-users-change" class="text-sm mt-1">-</p>
-                    </div>
-                    <div id="kpi-returning-users-chart" style="width: 80px; height: 40px;"></div>
-                </div>
-            </div>
-
-            <!-- 首次用户数 -->
-            <div class="kpi-card bg-white rounded-lg shadow-sm p-6">
-                <div class="flex items-center justify-between mb-2">
-                    <div class="flex items-center space-x-2">
-                        <h3 class="text-sm font-medium text-gray-500">首次用户数</h3>
-                        <svg onclick="showMetricHelp('first-users')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <svg class="w-5 h-5 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
-                    </svg>
-                </div>
-                <div class="flex items-end justify-between">
-                    <div>
-                        <p id="kpi-first-users" class="text-4xl font-bold text-gray-900">-</p>
-                        <p id="kpi-first-users-change" class="text-sm mt-1">-</p>
-                    </div>
-                    <div id="kpi-first-users-chart" style="width: 80px; height: 40px;"></div>
                 </div>
             </div>
         </div>
@@ -499,14 +509,14 @@
         // 显示指标说明
         function showMetricHelp(metricName) {
             const descriptions = {
-                'total-users': '统计时间范围内有活动记录的独立用户数量（去重后的user_id数量）',
-                'enter-rate': '进入问诊的用户数 / 总用户数 × 100%。衡量用户从引导页到问诊页的转化率',
-                'diagnosis-rate': '有诊断行为的用户数 / 总用户数 × 100%。诊断行为包括：发送消息、查看诊断结论等',
-                'complete-rate': '查看评分页面的用户数 / 总用户数 × 100%。衡量完整完成问诊流程的用户比例',
-                'retention-rate': '昨天活跃用户中，今天再次访问的用户占比。计算方式：今天回访的昨日用户数 / 昨天总用户数 × 100%',
-                'cumulative-users': '从平台上线至今，所有历史数据中的独立用户总数（包含所有时间段的用户去重）',
-                'returning-users': '时间范围内，进入问诊但未完成科室选择的用户数。通常为老用户直接访问问诊页',
-                'first-users': '时间范围内，完成科室选择的用户数。通常为首次访问的新用户'
+                'total-users': '【活跃用户数】统计时间范围内有活动记录的独立用户数量（去重后的user_id数量）',
+                'enter-rate': '【进入问诊率】进入问诊的用户数 / 活跃用户数 × 100%。衡量用户从引导页到问诊页的转化率',
+                'diagnosis-rate': '【活跃率】有诊断行为的用户数 / 活跃用户数 × 100%。诊断行为包括：发送消息、查看诊断结论等交互操作',
+                'complete-rate': '【完成率】查看评分页面的用户数 / 活跃用户数 × 100%。衡量完整完成问诊流程的用户比例',
+                'retention-rate': '【次日留存率】计算时间范围内所有相邻日期的平均留存率。每对相邻日期：当日活跃用户中次日回访的用户占比',
+                'cumulative-users': '【平台累计用户】从平台上线至今，所有历史数据中的独立用户总数（包含所有时间段的用户去重）。此指标不受筛选时间范围影响',
+                'returning-users': '【回访用户数】时间范围内，进入问诊但未完成科室选择的用户数。通常为老用户直接访问问诊页',
+                'first-users': '【新用户数】时间范围内，完成科室选择的用户数。通常为首次访问的新用户'
             };
 
             const description = descriptions[metricName] || '暂无说明';
@@ -1205,7 +1215,7 @@
                     radius: '60%',
                     center: ['60%', '50%'],
                     data: [
-                        { value: metrics.firstTimeUsers, name: '首次用户' },
+                        { value: metrics.firstTimeUsers, name: '新用户' },
                         { value: metrics.returningUsers, name: '回访用户' }
                     ],
                     emphasis: {
@@ -1579,13 +1589,13 @@
             const systemPrompt = `你是一个数据分析助手，专门帮助用户理解和分析 AI病例研习平台的数据。
 
 当前数据概览（${dataContext.timeRange}）：
-- 总用户数：${dataContext.totalUsers}人
+- 活跃用户数：${dataContext.totalUsers}人
 - 进入问诊用户：${dataContext.enterChatUsers}人
 - 进入问诊率：${dataContext.enterRate}%
-- 诊断行为率：${dataContext.diagnosisRate}%
+- 活跃率：${dataContext.diagnosisRate}%
 - 完成率：${dataContext.completeRate}%
-- 首次用户：${dataContext.firstTimeUsers}人
-- 回访用户：${dataContext.returningUsers}人
+- 新用户数：${dataContext.firstTimeUsers}人
+- 回访用户数：${dataContext.returningUsers}人
 - 次日留存率：${dataContext.retentionRate}%
 - 平台累计用户：${dataContext.cumulativeUsers}人
 - 热门科室：${dataContext.topDepartments}
