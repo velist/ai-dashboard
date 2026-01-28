@@ -2,8 +2,8 @@ name: 更新数据
 
 on:
   schedule:
-    # 每天凌晨1点（UTC时间）执行一次
-    - cron: '0 1 * * *'
+    # 每天凌晨2点（北京时间）执行一次，UTC 18:00 = 北京时间次日 02:00
+    - cron: '0 18 * * *'
   workflow_dispatch: # 允许手动触发
 
 jobs:
@@ -26,7 +26,7 @@ jobs:
       - name: 安装依赖
         run: |
           pip install --upgrade pip
-          pip install pandas requests openpyxl
+          pip install pandas requests
 
       - name: 创建数据目录
         run: mkdir -p data

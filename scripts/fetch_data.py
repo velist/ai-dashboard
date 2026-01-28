@@ -18,7 +18,7 @@ if sys.platform == 'win32':
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 # API配置
-API_URL = 'http://blchat.ksbao.com:8001/api/events/export_v2?type=xls'
+API_URL = 'http://blchat.ksbao.com:8001/api/events/export_v2'
 
 # 排除的测试ID列表
 EXCLUDE_IDS = [
@@ -58,17 +58,21 @@ def fetch_data():
         print(f'✓ API响应成功: {response.status_code}')
         print(f'✓ 数据大小: {len(response.content) / 1024:.2f} KB')
 
-        return response.content
+        return response.json()
     except Exception as e:
         print(f'✗ 数据获取失败: {e}')
         raise
 
-def clean_data(excel_data):
+def clean_data(json_data):
     """清洗数据"""
     print('\n开始清洗数据...')
 
-    # 读取Excel
-    df = pd.read_excel(BytesIO(excel_data))
+    # 从 JSON 中提取 items 数组
+    if 'items' not in json_data:
+        raise ValueError('API 返回的 JSON 数据中没有 items 字段')
+    
+    # 转换为 DataFrame
+    df = pd.DataFrame(json_data['items'])
     print(f'✓ 原始数据: {len(df)}行, {df["user_id"].nunique()}个用户')
 
     # 排除测试ID
@@ -134,10 +138,10 @@ def main():
 
     try:
         # 1. 获取数据
-        excel_data = fetch_data()
+        json_data = fetch_data()
 
         # 2. 清洗数据
-        df = clean_data(excel_data)
+        df = clean_data(json_data)
 
         # 3. 保存数据
         save_data(df)
