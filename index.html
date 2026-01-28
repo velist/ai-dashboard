@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,13 +21,16 @@
         .kpi-card {
             transition: all 0.3s ease;
         }
+
         .kpi-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
         }
+
         .chart-container {
             min-height: 400px;
         }
+
         .loading-spinner {
             border: 3px solid #f3f3f3;
             border-top: 3px solid #3B82F6;
@@ -35,10 +39,17 @@
             height: 40px;
             animation: spin 1s linear infinite;
         }
+
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
+
         .section-card {
             background: white;
             border-radius: 8px;
@@ -46,6 +57,7 @@
             margin-bottom: 24px;
             overflow: hidden;
         }
+
         .section-header {
             padding: 16px 24px;
             border-bottom: 1px solid #e5e7eb;
@@ -55,31 +67,39 @@
             cursor: pointer;
             user-select: none;
         }
+
         .section-header:hover {
             background-color: #f9fafb;
         }
+
         .section-content {
             padding: 24px;
         }
+
         .trend-up {
             color: #EF4444;
         }
+
         .trend-down {
             color: #10B981;
         }
+
         .trend-neutral {
             color: #6B7280;
         }
+
         .help-icon {
             cursor: help;
             opacity: 0.6;
             transition: opacity 0.2s;
         }
+
         .help-icon:hover {
             opacity: 1;
         }
     </style>
 </head>
+
 <body class="bg-gray-50">
     <!-- 顶部导航栏 -->
     <nav class="bg-white shadow-sm border-b border-gray-200">
@@ -92,37 +112,50 @@
                     <span id="data-time-range" class="text-sm text-gray-500"></span>
                     <!-- 导出按钮 -->
                     <div class="relative">
-                        <button id="export-btn" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center space-x-2">
+                        <button id="export-btn"
+                            class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors flex items-center space-x-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                             </svg>
                             <span>导出数据</span>
                         </button>
                         <!-- 导出格式下拉菜单 -->
-                        <div id="export-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                        <div id="export-menu"
+                            class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
                             <div class="py-1">
-                                <button onclick="exportData('csv')" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2">
+                                <button onclick="exportData('csv')"
+                                    class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                        </path>
                                     </svg>
                                     <span>导出为 CSV</span>
                                 </button>
-                                <button onclick="exportData('json')" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2">
+                                <button onclick="exportData('json')"
+                                    class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2">
+                                        </path>
                                     </svg>
                                     <span>导出为 JSON</span>
                                 </button>
-                                <button onclick="exportData('excel')" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2">
+                                <button onclick="exportData('excel')"
+                                    class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z">
+                                        </path>
                                     </svg>
                                     <span>导出为 Excel</span>
                                 </button>
                             </div>
                         </div>
                     </div>
-                    <button id="refresh-btn" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                    <button id="refresh-btn"
+                        class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
                         <span id="refresh-text">加载中...</span>
                     </button>
                 </div>
@@ -139,13 +172,16 @@
                 <!-- 日期范围选择 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">日期范围</label>
-                    <input type="text" id="date-range-picker" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="选择日期范围">
+                    <input type="text" id="date-range-picker"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="选择日期范围">
                 </div>
 
                 <!-- 快捷日期选择 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">快捷选择</label>
-                    <select id="quick-date-select" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <select id="quick-date-select"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         <option value="7">最近7天</option>
                         <option value="14">最近14天</option>
                         <option value="30">最近30天</option>
@@ -155,7 +191,8 @@
                 <!-- 用户类型筛选 -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">用户类型</label>
-                    <select id="user-type-filter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <select id="user-type-filter"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         <option value="all">全部用户</option>
                         <option value="first">仅首次用户</option>
                         <option value="returning">仅回访用户</option>
@@ -164,10 +201,12 @@
 
                 <!-- 操作按钮 -->
                 <div class="flex items-end space-x-2">
-                    <button id="apply-filter-btn" class="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                    <button id="apply-filter-btn"
+                        class="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
                         应用筛选
                     </button>
-                    <button id="reset-filter-btn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                    <button id="reset-filter-btn"
+                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
                         重置
                     </button>
                 </div>
@@ -175,7 +214,8 @@
         </div>
 
         <!-- 加载提示 -->
-        <div id="loading-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div id="loading-overlay"
+            class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-white rounded-lg p-6 flex flex-col items-center">
                 <div class="loading-spinner"></div>
                 <p class="mt-4 text-gray-600">加载数据中...</p>
@@ -192,12 +232,17 @@
                     <div class="flex items-center justify-between mb-2">
                         <div class="flex items-center space-x-2">
                             <h3 class="text-sm font-medium text-gray-500">活跃用户数</h3>
-                            <svg onclick="showMetricHelp('total-users')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            <svg onclick="showMetricHelp('total-users')" class="w-4 h-4 text-gray-400 help-icon"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                </path>
                             </svg>
                         </div>
                         <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
+                            </path>
                         </svg>
                     </div>
                     <div class="flex items-end justify-between">
@@ -214,12 +259,17 @@
                     <div class="flex items-center justify-between mb-2">
                         <div class="flex items-center space-x-2">
                             <h3 class="text-sm font-medium text-gray-500">新用户数</h3>
-                            <svg onclick="showMetricHelp('first-users')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            <svg onclick="showMetricHelp('first-users')" class="w-4 h-4 text-gray-400 help-icon"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                </path>
                             </svg>
                         </div>
                         <svg class="w-5 h-5 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z">
+                            </path>
                         </svg>
                     </div>
                     <div class="flex items-end justify-between">
@@ -236,12 +286,17 @@
                     <div class="flex items-center justify-between mb-2">
                         <div class="flex items-center space-x-2">
                             <h3 class="text-sm font-medium text-gray-500">回访用户数</h3>
-                            <svg onclick="showMetricHelp('returning-users')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            <svg onclick="showMetricHelp('returning-users')" class="w-4 h-4 text-gray-400 help-icon"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                </path>
                             </svg>
                         </div>
                         <svg class="w-5 h-5 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v16l4-2 4 2 4-2 4 2z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v16l4-2 4 2 4-2 4 2z">
+                            </path>
                         </svg>
                     </div>
                     <div class="flex items-end justify-between">
@@ -258,12 +313,17 @@
                     <div class="flex items-center justify-between mb-2">
                         <div class="flex items-center space-x-2">
                             <h3 class="text-sm font-medium text-gray-500">进入问诊率</h3>
-                            <svg onclick="showMetricHelp('enter-rate')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            <svg onclick="showMetricHelp('enter-rate')" class="w-4 h-4 text-gray-400 help-icon"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                </path>
                             </svg>
                         </div>
                         <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                            </path>
                         </svg>
                     </div>
                     <div class="flex items-end justify-between">
@@ -280,12 +340,16 @@
                     <div class="flex items-center justify-between mb-2">
                         <div class="flex items-center space-x-2">
                             <h3 class="text-sm font-medium text-gray-500">活跃率</h3>
-                            <svg onclick="showMetricHelp('diagnosis-rate')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            <svg onclick="showMetricHelp('diagnosis-rate')" class="w-4 h-4 text-gray-400 help-icon"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                </path>
                             </svg>
                         </div>
                         <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                         </svg>
                     </div>
                     <div class="flex items-end justify-between">
@@ -302,12 +366,16 @@
                     <div class="flex items-center justify-between mb-2">
                         <div class="flex items-center space-x-2">
                             <h3 class="text-sm font-medium text-gray-500">完成率</h3>
-                            <svg onclick="showMetricHelp('complete-rate')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            <svg onclick="showMetricHelp('complete-rate')" class="w-4 h-4 text-gray-400 help-icon"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                </path>
                             </svg>
                         </div>
                         <svg class="w-5 h-5 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
                     <div class="flex items-end justify-between">
@@ -324,12 +392,17 @@
                     <div class="flex items-center justify-between mb-2">
                         <div class="flex items-center space-x-2">
                             <h3 class="text-sm font-medium text-gray-500">次日留存率</h3>
-                            <svg onclick="showMetricHelp('retention-rate')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            <svg onclick="showMetricHelp('retention-rate')" class="w-4 h-4 text-gray-400 help-icon"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                </path>
                             </svg>
                         </div>
                         <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
+                            </path>
                         </svg>
                     </div>
                     <div class="flex items-end justify-between">
@@ -352,12 +425,17 @@
                     <div class="flex items-center justify-between mb-2">
                         <div class="flex items-center space-x-2">
                             <h3 class="text-sm font-medium text-gray-500">平台累计用户</h3>
-                            <svg onclick="showMetricHelp('cumulative-users')" class="w-4 h-4 text-gray-400 help-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            <svg onclick="showMetricHelp('cumulative-users')" class="w-4 h-4 text-gray-400 help-icon"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                </path>
                             </svg>
                         </div>
                         <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                            </path>
                         </svg>
                     </div>
                     <div class="flex items-end justify-between">
@@ -429,31 +507,72 @@
     </div>
 
     <!-- AI助手聊天界面 -->
-    <div id="ai-chat-container" class="hidden fixed bottom-20 right-6 w-96 max-h-[650px] bg-white rounded-lg shadow-2xl flex flex-col z-50 border border-gray-200">
+    <div id="ai-chat-container"
+        class="hidden fixed bottom-20 right-6 w-96 max-h-[650px] bg-white rounded-lg shadow-2xl flex flex-col z-50 border border-gray-200">
         <!-- 聊天头部 -->
-        <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-t-lg flex justify-between items-center">
+        <div
+            class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-t-lg flex justify-between items-center">
             <div class="flex items-center space-x-2">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z">
+                    </path>
                 </svg>
                 <h3 class="font-semibold">AI数据助手</h3>
             </div>
             <button onclick="toggleChat()" class="hover:bg-blue-700 rounded p-1">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
                 </svg>
             </button>
         </div>
 
-        <!-- 模型选择器 -->
-        <div class="px-4 py-2 bg-blue-50 border-b border-blue-100">
+        <!-- 供应商和模型配置 -->
+        <div class="px-4 py-3 bg-blue-50 border-b border-blue-100">
+            <!-- 供应商选择 -->
+            <div class="mb-2">
+                <label for="ai-provider-select" class="text-xs text-gray-600 font-medium">AI 供应商：</label>
+                <select id="ai-provider-select"
+                    class="w-full text-xs px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-400 focus:border-blue-400 bg-white mt-1"
+                    onchange="updateProviderConfig()">
+                    <optgroup label="默认配置">
+                        <option value="cloudflare" selected>Cloudflare Worker（默认-已配置）</option>
+                    </optgroup>
+                    <optgroup label="常用供应商">
+                        <option value="deepseek">DeepSeek</option>
+                        <option value="kimi">Kimi (月之暗面)</option>
+                        <option value="alibaba">阿里百炼</option>
+                        <option value="siliconflow">硅基流动 (SiliconFlow)</option>
+                    </optgroup>
+                    <optgroup label="自定义">
+                        <option value="custom">自定义端点</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <!-- 自定义端点配置（默认隐藏） -->
+            <div id="custom-endpoint-config" class="hidden mb-2 space-y-2">
+                <div>
+                    <label for="custom-endpoint-url" class="text-xs text-gray-600">API 端点：</label>
+                    <input type="text" id="custom-endpoint-url"
+                        placeholder="https://api.example.com/v1/chat/completions"
+                        class="w-full text-xs px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-400 mt-1" />
+                </div>
+                <div>
+                    <label for="custom-api-key" class="text-xs text-gray-600">API Key：</label>
+                    <input type="password" id="custom-api-key" placeholder="sk-..."
+                        class="w-full text-xs px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-400 mt-1" />
+                </div>
+            </div>
+
+            <!-- 模型选择 -->
             <div class="flex items-center space-x-2">
                 <label for="ai-model-select" class="text-xs text-gray-600 font-medium">模型：</label>
-                <select
-                    id="ai-model-select"
+                <select id="ai-model-select"
                     class="flex-1 text-xs px-2 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-blue-400 focus:border-blue-400 bg-white"
-                    onchange="updateModelDisplay()"
-                >
+                    onchange="updateModelDisplay()">
+                    <!-- 模型选项将根据供应商动态更新 -->
                     <option value="Qwen/Qwen2.5-7B-Instruct">Qwen2.5-7B（默认-快速）</option>
                     <option value="Qwen/Qwen2.5-72B-Instruct">Qwen2.5-72B（强大-准确）</option>
                     <option value="deepseek-ai/DeepSeek-V3">DeepSeek-V3（最强-推理）</option>
@@ -468,7 +587,9 @@
         <!-- 聊天消息区域 -->
         <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50">
             <div class="flex items-start space-x-2">
-                <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-semibold flex-shrink-0">AI</div>
+                <div
+                    class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-semibold flex-shrink-0">
+                    AI</div>
                 <div class="bg-white rounded-lg p-3 shadow-sm max-w-[80%]">
                     <p class="text-sm text-gray-700">你好！我是数据助手，可以帮你分析和查询仪表盘数据。</p>
                     <p class="text-xs text-gray-500 mt-2">💡 已为团队统一配置，可直接使用</p>
@@ -486,19 +607,14 @@
         <!-- 输入区域 -->
         <div class="p-4 border-t border-gray-200 bg-white rounded-b-lg">
             <div class="flex space-x-2">
-                <input
-                    type="text"
-                    id="chat-input"
-                    placeholder="输入你的问题..."
+                <input type="text" id="chat-input" placeholder="输入你的问题..."
                     class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-                    onkeypress="if(event.key==='Enter') sendMessage()"
-                />
-                <button
-                    onclick="sendMessage()"
-                    class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center"
-                >
+                    onkeypress="if(event.key==='Enter') sendMessage()" />
+                <button onclick="sendMessage()"
+                    class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
                     </svg>
                 </button>
             </div>
@@ -510,13 +626,12 @@
     </div>
 
     <!-- AI助手浮动按钮 -->
-    <button
-        onclick="toggleChat()"
-        id="ai-chat-btn"
-        class="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-110 flex items-center justify-center z-40"
-    >
+    <button onclick="toggleChat()" id="ai-chat-btn"
+        class="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-110 flex items-center justify-center z-40">
         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z">
+            </path>
         </svg>
     </button>
 
@@ -712,7 +827,7 @@
                 locale: "zh",
                 dateFormat: "Y-m-d",
                 defaultDate: [startDate, endDate],
-                onChange: function(selectedDates) {
+                onChange: function (selectedDates) {
                     if (selectedDates.length === 2) {
                         // 用户选择了日期范围，暂不自动应用
                         console.log('日期范围已选择:', selectedDates);
@@ -1034,7 +1149,7 @@
                 ],
                 tooltip: {
                     trigger: 'item',
-                    formatter: function(params) {
+                    formatter: function (params) {
                         const percent = ((params.value / params.data.total) * 100).toFixed(1);
                         return `${params.seriesName}<br/>${params.name}: ${params.value}人 (${percent}%)`;
                     }
@@ -1132,7 +1247,7 @@
                         itemStyle: {
                             borderColor: '#fff',
                             borderWidth: 1,
-                            color: function(params) {
+                            color: function (params) {
                                 const colors = ['#91cc75', '#fac858', '#ee6666'];
                                 return colors[params.dataIndex];
                             }
@@ -1453,7 +1568,7 @@
                     label: {
                         show: true,
                         position: 'right',
-                        formatter: function(params) {
+                        formatter: function (params) {
                             const item = featureData[featureData.length - 1 - params.dataIndex];
                             return `${item.users}人 (${item.rate}%)`;
                         }
@@ -1643,10 +1758,75 @@
 
         // ==================== AI 聊天助手 ====================
 
+        // 供应商配置
+        const PROVIDER_CONFIGS = {
+            cloudflare: {
+                name: 'Cloudflare Worker',
+                endpoint: 'https://ai-dashboard-proxy.vee5208.workers.dev',
+                requiresKey: false,
+                models: [
+                    { value: 'Qwen/Qwen2.5-7B-Instruct', label: 'Qwen2.5-7B（默认-快速）', desc: '均衡速度和质量，适合日常查询' },
+                    { value: 'Qwen/Qwen2.5-72B-Instruct', label: 'Qwen2.5-72B（强大-准确）', desc: '更强大的推理能力，适合复杂分析' },
+                    { value: 'deepseek-ai/DeepSeek-V3', label: 'DeepSeek-V3（最强-推理）', desc: '顶级推理能力，适合深度分析' },
+                    { value: 'THUDM/glm-4-9b-chat', label: 'GLM-4-9B（中文优化）', desc: '中文理解优秀，适合本土化场景' },
+                    { value: 'meta-llama/Llama-3.3-70B-Instruct', label: 'Llama-3.3-70B（通用）', desc: '通用能力强，适合多样化任务' },
+                    { value: 'alibaba/Qwen2.5-Coder-7B-Instruct', label: 'Qwen2.5-Coder-7B（代码）', desc: '代码理解优秀，适合技术问题' }
+                ]
+            },
+            deepseek: {
+                name: 'DeepSeek',
+                endpoint: 'https://api.deepseek.com/v1/chat/completions',
+                requiresKey: true,
+                models: [
+                    { value: 'deepseek-chat', label: 'DeepSeek Chat', desc: '通用对话模型' },
+                    { value: 'deepseek-reasoner', label: 'DeepSeek Reasoner', desc: '推理增强模型' }
+                ]
+            },
+            kimi: {
+                name: 'Kimi (月之暗面)',
+                endpoint: 'https://api.moonshot.cn/v1/chat/completions',
+                requiresKey: true,
+                models: [
+                    { value: 'moonshot-v1-8k', label: 'Moonshot V1 8K', desc: '8K 上下文窗口' },
+                    { value: 'moonshot-v1-32k', label: 'Moonshot V1 32K', desc: '32K 上下文窗口' },
+                    { value: 'moonshot-v1-128k', label: 'Moonshot V1 128K', desc: '128K 上下文窗口' }
+                ]
+            },
+            alibaba: {
+                name: '阿里百炼',
+                endpoint: 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',
+                requiresKey: true,
+                models: [
+                    { value: 'qwen-plus', label: 'Qwen Plus', desc: '通用对话模型' },
+                    { value: 'qwen-turbo', label: 'Qwen Turbo', desc: '快速响应模型' },
+                    { value: 'qwen-max', label: 'Qwen Max', desc: '最强性能模型' }
+                ]
+            },
+            siliconflow: {
+                name: '硅基流动',
+                endpoint: 'https://api.siliconflow.cn/v1/chat/completions',
+                requiresKey: true,
+                models: [
+                    { value: 'Qwen/Qwen2.5-7B-Instruct', label: 'Qwen2.5-7B', desc: '快速响应' },
+                    { value: 'Qwen/Qwen2.5-72B-Instruct', label: 'Qwen2.5-72B', desc: '强大性能' },
+                    { value: 'deepseek-ai/DeepSeek-V3', label: 'DeepSeek-V3', desc: '顶级推理' }
+                ]
+            },
+            custom: {
+                name: '自定义端点',
+                endpoint: '',
+                requiresKey: true,
+                models: [
+                    { value: 'custom-model', label: '自定义模型', desc: '请在端点配置中指定' }
+                ]
+            }
+        };
+
         // 使用 Cloudflare Worker 代理（API Key 安全存储在 Worker 环境变量中）
         const AI_PROXY_URL = 'https://ai-dashboard-proxy.vee5208.workers.dev';
 
         let chatHistory = [];
+        let currentProvider = 'cloudflare';
 
         // 模型描述映射
         const MODEL_DESCRIPTIONS = {
@@ -1658,6 +1838,45 @@
             'alibaba/Qwen2.5-Coder-7B-Instruct': '代码理解优秀，适合技术问题'
         };
 
+        // 更新供应商配置
+        function updateProviderConfig() {
+            const providerSelect = document.getElementById('ai-provider-select');
+            const provider = providerSelect.value;
+            currentProvider = provider;
+
+            const config = PROVIDER_CONFIGS[provider];
+            const customConfig = document.getElementById('custom-endpoint-config');
+            const modelSelect = document.getElementById('ai-model-select');
+
+            // 显示/隐藏自定义端点配置
+            if (provider === 'custom') {
+                customConfig.classList.remove('hidden');
+            } else {
+                customConfig.classList.add('hidden');
+            }
+
+            // 更新模型列表
+            modelSelect.innerHTML = '';
+            config.models.forEach((model, index) => {
+                const option = document.createElement('option');
+                option.value = model.value;
+                option.textContent = model.label;
+                if (index === 0) option.selected = true;
+                modelSelect.appendChild(option);
+            });
+
+            // 更新模型描述
+            updateModelDisplay();
+
+            // 提示用户配置 API Key（如果需要）
+            if (config.requiresKey && provider !== 'custom') {
+                const apiKeyPrompt = prompt(`请输入 ${config.name} 的 API Key（将保存在浏览器本地存储中）：`);
+                if (apiKeyPrompt) {
+                    localStorage.setItem(`ai_api_key_${provider}`, apiKeyPrompt);
+                }
+            }
+        }
+
         // 获取当前选中的模型
         function getCurrentModel() {
             const select = document.getElementById('ai-model-select');
@@ -1666,8 +1885,13 @@
 
         // 更新模型描述
         function updateModelDisplay() {
-            const model = getCurrentModel();
-            const description = MODEL_DESCRIPTIONS[model] || '高质量AI模型';
+            const provider = currentProvider;
+            const config = PROVIDER_CONFIGS[provider];
+            const modelValue = getCurrentModel();
+
+            const model = config.models.find(m => m.value === modelValue);
+            const description = model ? model.desc : MODEL_DESCRIPTIONS[modelValue] || '高质量AI模型';
+
             const descElement = document.getElementById('model-description');
             if (descElement) {
                 descElement.textContent = description;
@@ -1754,8 +1978,8 @@
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
 
-        // 调用 AI 代理 API
-        async function callSiliconFlowAPI(userMessage, dataContext) {
+        // 调用 AI API（支持多供应商）
+        async function callAIAPI(userMessage, dataContext) {
             const systemPrompt = `你是一个数据分析助手，专门帮助用户理解和分析 AI病例研习平台的数据。
 
 当前数据概览（${dataContext.timeRange}）：
@@ -1782,11 +2006,38 @@
 
             try {
                 const currentModel = getCurrentModel();
-                const response = await fetch(AI_PROXY_URL, {
+                const config = PROVIDER_CONFIGS[currentProvider];
+
+                // 获取端点和 API Key
+                let endpoint = config.endpoint;
+                let apiKey = null;
+
+                if (currentProvider === 'custom') {
+                    endpoint = document.getElementById('custom-endpoint-url').value;
+                    apiKey = document.getElementById('custom-api-key').value;
+                    if (!endpoint) {
+                        throw new Error('请先配置自定义端点');
+                    }
+                } else if (config.requiresKey) {
+                    apiKey = localStorage.getItem(`ai_api_key_${currentProvider}`);
+                    if (!apiKey) {
+                        throw new Error(`请先配置 ${config.name} 的 API Key`);
+                    }
+                }
+
+                // 构建请求头
+                const headers = {
+                    'Content-Type': 'application/json'
+                };
+
+                // 对于需要 API Key 的供应商，添加 Authorization 头
+                if (apiKey) {
+                    headers['Authorization'] = `Bearer ${apiKey}`;
+                }
+
+                const response = await fetch(endpoint, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: headers,
                     body: JSON.stringify({
                         model: currentModel,
                         messages: messages,
@@ -1798,20 +2049,22 @@
 
                 if (!response.ok) {
                     const errorData = await response.json().catch(() => ({}));
-                    throw new Error(`AI代理请求失败: ${response.status} - ${errorData.message || response.statusText}`);
+                    throw new Error(`AI请求失败: ${response.status} - ${errorData.message || errorData.error || response.statusText}`);
                 }
 
                 const data = await response.json();
-                const aiResponse = data.choices[0].message.content;
+                const aiMessage = data.choices[0].message.content;
+                chatHistory.push({ role: 'assistant', content: aiMessage });
 
-                chatHistory.push({ role: 'assistant', content: aiResponse });
-
-                return aiResponse;
+                return aiMessage;
             } catch (error) {
-                console.error('AI API错误:', error);
-                return `抱歉，AI助手暂时不可用。请稍后再试。错误详情：${error.message}`;
+                console.error('AI API调用失败:', error);
+                throw error;
             }
         }
+
+        // 兼容旧函数名
+        const callSiliconFlowAPI = callAIAPI;
 
         // 发送消息
         async function sendMessage() {
@@ -1854,4 +2107,5 @@
 
     </script>
 </body>
+
 </html>
