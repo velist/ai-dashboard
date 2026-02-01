@@ -1048,8 +1048,24 @@
             const lastRetention = calculateRetention(lastWeekData, []);
             updateKPICard('retention-rate', retentionRate + '%', lastRetention + '%', true);
 
-            // 平台累计用户
-            updateKPICard('cumulative-users', cumulativeUsers, cumulativeUsers);
+            // 平台累计用户（对比值为：排除本周新增用户后的累计用户）
+            // 计算本周新增的用户数
+            const currentUserIds = new Set(currentData.map(r => r.user_id));
+            const lastWeekUserIds = new Set(lastWeekData.map(r => r.user_id));
+            const allUserIds = new Set(rawData.map(r => r.user_id));
+
+            // 上周数据中的所有用户（排除本周数据中的新增）
+            const usersBeforeThisWeek = new Set(
+                rawData.filter(r => {
+                    const eventTime = new Date(r.time);
+                    const weekAgo = new Date();
+                    weekAgo.setDate(weekAgo.getDate() - 7);
+                    return eventTime < weekAgo;
+                }).map(r => r.user_id)
+            );
+            const lastCumulativeUsers = usersBeforeThisWeek.size || cumulativeUsers;
+
+            updateKPICard('cumulative-users', cumulativeUsers, lastCumulativeUsers);
 
             // 回访用户数
             updateKPICard('returning-users', current.returningUsers, last.returningUsers);
