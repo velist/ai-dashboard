@@ -504,6 +504,24 @@
             </div>
         </div>
 
+        <!-- 用户反馈 -->
+        <div class="section-card">
+            <div class="section-header">
+                <div class="flex items-center space-x-2">
+                    <h2 class="text-lg font-semibold text-gray-900">用户反馈</h2>
+                    <span id="feedback-count" class="px-2 py-0.5 text-xs font-medium bg-orange-100 text-orange-600 rounded-full">0</span>
+                </div>
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </div>
+            <div class="section-content">
+                <div id="feedback-list" class="space-y-3">
+                    <p class="text-gray-500 text-sm">暂无反馈数据</p>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- AI助手聊天界面 -->
@@ -1028,6 +1046,7 @@
             renderUserTypeChart(currentMetrics);
             renderDepartmentChart();
             renderFeatureUsageChart();
+            renderFeedbackList();
         }
 
         // 更新KPI卡片
@@ -1593,6 +1612,90 @@
             };
 
             chart.setOption(option);
+        }
+
+        // 渲染用户反馈列表
+        function renderFeedbackList() {
+            // 从原始数据中提取所有反馈记录
+            const feedbackRecords = rawData.filter(r =>
+                r.element && r.element.includes('反馈')
+            );
+
+            // 提取已提交的反馈内容
+            const submittedFeedback = feedbackRecords
+                .filter(r => r.element.includes('提交无科室反馈:'))
+                .map(r => {
+                    const content = r.element.split('提交无科室反馈:')[1] || '';
+                    return {
+                        content: content.trim(),
+                        km: r.km || '未知科目',
+                        time: new Date(r.time),
+                        userId: r.user_id,
+                        isVip: r.is_vip
+                    };
+                })
+                .sort((a, b) => b.time - a.time);
+
+            // 统计点击反馈按钮的次数
+            const clickCount = feedbackRecords.filter(r => r.element === '无科室反馈').length;
+
+            // 更新反馈数量徽章
+            document.getElementById('feedback-count').textContent = submittedFeedback.length;
+
+            // 渲染反馈列表
+            const listContainer = document.getElementById('feedback-list');
+
+            if (submittedFeedback.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="text-center py-6 text-gray-500">
+                        <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                        <p class="text-sm">暂无用户反馈</p>
+                        <p class="text-xs text-gray-400 mt-1">点击反馈按钮次数: ${clickCount}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = `
+                <div class="mb-4 p-3 bg-blue-50 rounded-lg">
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-blue-700">共 ${submittedFeedback.length} 条反馈</span>
+                        <span class="text-blue-500">点击反馈按钮 ${clickCount} 次</span>
+                    </div>
+                </div>
+                <div class="space-y-3">
+            `;
+
+            submittedFeedback.forEach((feedback, index) => {
+                const timeStr = feedback.time.toLocaleString('zh-CN', {
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                const vipBadge = feedback.isVip ?
+                    '<span class="ml-2 px-1.5 py-0.5 text-xs bg-yellow-100 text-yellow-700 rounded">VIP</span>' : '';
+
+                html += `
+                    <div class="p-4 bg-gray-50 rounded-lg border border-gray-100 hover:border-orange-200 transition-colors">
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                                <div class="flex items-center">
+                                    <span class="text-lg font-medium text-orange-600">${feedback.content}</span>
+                                    ${vipBadge}
+                                </div>
+                                <p class="text-sm text-gray-500 mt-1">来源: ${feedback.km}</p>
+                            </div>
+                            <span class="text-xs text-gray-400">${timeStr}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            listContainer.innerHTML = html;
         }
 
         // ==================== 事件监听 ====================
