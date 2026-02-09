@@ -1616,17 +1616,15 @@
 
         // 渲染用户反馈列表
         function renderFeedbackList() {
-            // 收集所有用户输入的反馈内容
+            // 只收集带"反馈"字样的用户输入
             const allFeedback = [];
 
-            // 1. 科室需求反馈
+            // 科室需求反馈
             rawData.filter(r => r.element && r.element.includes('提交无科室反馈:'))
                 .forEach(r => {
                     const content = r.element.split('提交无科室反馈:')[1] || '';
                     allFeedback.push({
-                        type: 'department',
                         typeName: '科室需求',
-                        typeColor: 'orange',
                         content: content.trim(),
                         km: r.km || '未知科目',
                         time: new Date(r.time),
@@ -1635,51 +1633,10 @@
                     });
                 });
 
-            // 2. 用户问诊输入（医生提问实际是用户输入的内容）
-            rawData.filter(r => r.element && r.element.startsWith('医生提问:') && r.action_type === 'submit')
-                .forEach(r => {
-                    const content = r.element.split('医生提问:')[1] || '';
-                    // 过滤掉太短或纯数字的内容
-                    if (content.length > 2 && !/^\d+$/.test(content)) {
-                        allFeedback.push({
-                            type: 'question',
-                            typeName: '问诊输入',
-                            typeColor: 'blue',
-                            content: content.trim(),
-                            km: r.km || '未知科目',
-                            time: new Date(r.time),
-                            userId: r.user_id,
-                            isVip: r.is_vip
-                        });
-                    }
-                });
-
-            // 3. 诊断结论输入
-            rawData.filter(r => r.element && r.element.startsWith('诊断结论:'))
-                .forEach(r => {
-                    const content = r.element.split('诊断结论:')[1] || '';
-                    // 过滤掉太短或纯数字的内容
-                    if (content.length > 1 && !/^\d+$/.test(content)) {
-                        allFeedback.push({
-                            type: 'diagnosis',
-                            typeName: '诊断输入',
-                            typeColor: 'green',
-                            content: content.trim(),
-                            km: r.km || '未知科目',
-                            time: new Date(r.time),
-                            userId: r.user_id,
-                            isVip: r.is_vip
-                        });
-                    }
-                });
-
             // 按时间排序（最新的在前）
             allFeedback.sort((a, b) => b.time - a.time);
 
-            // 统计各类型数量
-            const deptCount = allFeedback.filter(f => f.type === 'department').length;
-            const questionCount = allFeedback.filter(f => f.type === 'question').length;
-            const diagnosisCount = allFeedback.filter(f => f.type === 'diagnosis').length;
+            // 统计点击反馈按钮的次数
             const clickCount = rawData.filter(r => r.element === '无科室反馈').length;
 
             // 更新反馈数量徽章
@@ -1695,28 +1652,20 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                         </svg>
                         <p class="text-sm">暂无用户反馈</p>
+                        <p class="text-xs text-gray-400 mt-1">点击反馈按钮 ${clickCount} 次</p>
                     </div>
                 `;
                 return;
             }
 
-            // 颜色映射
-            const colorMap = {
-                orange: { bg: 'bg-orange-100', text: 'text-orange-700', border: 'border-orange-200' },
-                blue: { bg: 'bg-blue-100', text: 'text-blue-700', border: 'border-blue-200' },
-                green: { bg: 'bg-green-100', text: 'text-green-700', border: 'border-green-200' }
-            };
-
             let html = `
-                <div class="mb-4 p-3 bg-gray-50 rounded-lg">
-                    <div class="flex flex-wrap items-center gap-3 text-sm">
-                        <span class="text-gray-600">共 <strong>${allFeedback.length}</strong> 条反馈</span>
-                        <span class="px-2 py-0.5 bg-orange-100 text-orange-700 rounded-full text-xs">科室需求 ${deptCount}</span>
-                        <span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full text-xs">问诊输入 ${questionCount}</span>
-                        <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs">诊断输入 ${diagnosisCount}</span>
+                <div class="mb-4 p-3 bg-orange-50 rounded-lg">
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-orange-700">共 <strong>${allFeedback.length}</strong> 条科室需求反馈</span>
+                        <span class="text-orange-500">点击反馈按钮 ${clickCount} 次</span>
                     </div>
                 </div>
-                <div class="space-y-3 max-h-96 overflow-y-auto">
+                <div class="space-y-3">
             `;
 
             allFeedback.forEach((feedback) => {
@@ -1728,18 +1677,16 @@
                 });
                 const vipBadge = feedback.isVip ?
                     '<span class="ml-2 px-1.5 py-0.5 text-xs bg-yellow-100 text-yellow-700 rounded">VIP</span>' : '';
-                const colors = colorMap[feedback.typeColor];
 
                 html += `
-                    <div class="p-4 bg-white rounded-lg border border-gray-100 hover:${colors.border} transition-colors shadow-sm">
+                    <div class="p-4 bg-white rounded-lg border border-gray-100 hover:border-orange-200 transition-colors shadow-sm">
                         <div class="flex items-start justify-between gap-3">
                             <div class="flex-1 min-w-0">
                                 <div class="flex items-center flex-wrap gap-2 mb-1">
-                                    <span class="px-2 py-0.5 text-xs ${colors.bg} ${colors.text} rounded">${feedback.typeName}</span>
+                                    <span class="text-lg font-medium text-orange-600">${feedback.content}</span>
                                     ${vipBadge}
                                 </div>
-                                <p class="text-gray-800 font-medium break-words">${feedback.content}</p>
-                                <p class="text-xs text-gray-400 mt-1">来源: ${feedback.km}</p>
+                                <p class="text-xs text-gray-400">来源: ${feedback.km}</p>
                             </div>
                             <span class="text-xs text-gray-400 whitespace-nowrap">${timeStr}</span>
                         </div>
