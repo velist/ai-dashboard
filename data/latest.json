@@ -1,12 +1,54 @@
 {
-  "updateTime": "2026-02-11T19:03:44.657136",
-  "dataCount": 3294,
-  "userCount": 589,
+  "updateTime": "2026-02-12T19:02:49.614829",
+  "dataCount": 3297,
+  "userCount": 590,
   "timeRange": {
     "start": "2026-01-06T12:22:02+00:00",
-    "end": "2026-02-11T09:37:12+00:00"
+    "end": "2026-02-12T11:13:58+00:00"
   },
   "data": [
+    {
+      "user_id": "trial-e4095882-29a9-401d-8e29-1e10e8c74e5a",
+      "ksbaoUserId": "",
+      "module": "引导页",
+      "action_type": "enter",
+      "element": "引导页访问",
+      "status": "success",
+      "trial": 1,
+      "is_vip": false,
+      "subject": "blplatform",
+      "km": "未设置科目",
+      "provider": null,
+      "time": "2026-02-12T11:13:58+00:00"
+    },
+    {
+      "user_id": "0691376b-3b3a-4c3f-92c9-bab07114d862",
+      "ksbaoUserId": "",
+      "module": "问诊页面左上角菜单按钮",
+      "action_type": "click",
+      "element": "点开个人中心",
+      "status": "success",
+      "trial": 0,
+      "is_vip": false,
+      "subject": "wx1-ts",
+      "km": "未设置科目",
+      "provider": "wechat",
+      "time": "2026-02-12T08:33:51+00:00"
+    },
+    {
+      "user_id": "0691376b-3b3a-4c3f-92c9-bab07114d862",
+      "ksbaoUserId": "",
+      "module": "问诊页面",
+      "action_type": "enter",
+      "element": "问诊开始",
+      "status": "success",
+      "trial": 0,
+      "is_vip": false,
+      "subject": "wx1-ts",
+      "km": "未设置科目",
+      "provider": "wechat",
+      "time": "2026-02-12T08:33:36+00:00"
+    },
     {
       "user_id": "0691376b-3b3a-4c3f-92c9-bab07114d862",
       "ksbaoUserId": "",
