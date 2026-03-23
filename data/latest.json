@@ -1,12 +1,68 @@
 {
-  "updateTime": "2026-03-22T18:37:31.072417",
-  "dataCount": 3334,
-  "userCount": 598,
+  "updateTime": "2026-03-23T18:55:02.589941",
+  "dataCount": 3338,
+  "userCount": 600,
   "timeRange": {
     "start": "2026-01-06T12:22:02+00:00",
-    "end": "2026-03-22T12:00:38+00:00"
+    "end": "2026-03-23T15:11:15+00:00"
   },
   "data": [
+    {
+      "user_id": "trial-349936a9-88a1-4db1-97a6-24dec1d25bd1",
+      "ksbaoUserId": "",
+      "module": "引导页",
+      "action_type": "enter",
+      "element": "引导页访问",
+      "status": "success",
+      "trial": 1,
+      "is_vip": false,
+      "subject": "blplatform",
+      "km": "未设置科目",
+      "provider": null,
+      "time": "2026-03-23T15:11:15+00:00"
+    },
+    {
+      "user_id": "trial-349936a9-88a1-4db1-97a6-24dec1d25bd1",
+      "ksbaoUserId": "",
+      "module": "引导页",
+      "action_type": "enter",
+      "element": "引导页访问",
+      "status": "success",
+      "trial": 1,
+      "is_vip": false,
+      "subject": "blplatform",
+      "km": "未设置科目",
+      "provider": null,
+      "time": "2026-03-23T15:11:08+00:00"
+    },
+    {
+      "user_id": "769d7631-4bb0-4ad8-ac59-905699c79eaf",
+      "ksbaoUserId": "",
+      "module": "问诊页面",
+      "action_type": "enter",
+      "element": "问诊开始",
+      "status": "success",
+      "trial": 0,
+      "is_vip": false,
+      "subject": "wx1-ts",
+      "km": "未设置科目",
+      "provider": "wechat",
+      "time": "2026-03-23T09:10:43+00:00"
+    },
+    {
+      "user_id": "trial-3d9e0937-28ce-4c3a-8f15-7d483d414f8c",
+      "ksbaoUserId": "",
+      "module": "引导页",
+      "action_type": "enter",
+      "element": "引导页访问",
+      "status": "success",
+      "trial": 1,
+      "is_vip": false,
+      "subject": "blplatform",
+      "km": "未设置科目",
+      "provider": null,
+      "time": "2026-03-22T22:10:11+00:00"
+    },
     {
       "user_id": "trial-4d523624-aa19-4f3c-89c4-334fbb001518",
       "ksbaoUserId": "",
