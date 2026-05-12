@@ -1,12 +1,26 @@
 {
-  "updateTime": "2026-05-11T19:46:32.785889",
-  "dataCount": 3370,
-  "userCount": 611,
+  "updateTime": "2026-05-12T19:51:45.398693",
+  "dataCount": 3371,
+  "userCount": 612,
   "timeRange": {
     "start": "2026-01-06T12:22:02+00:00",
-    "end": "2026-05-10T00:00:00+00:00"
+    "end": "2026-05-11T22:05:47+00:00"
   },
   "data": [
+    {
+      "user_id": "trial-b4584158-5a79-4f2c-a3e9-762c0f2cb0b3",
+      "ksbaoUserId": "",
+      "module": "引导页",
+      "action_type": "enter",
+      "element": "引导页访问",
+      "status": "success",
+      "trial": 1,
+      "is_vip": false,
+      "subject": "blplatform",
+      "km": "未设置科目",
+      "provider": null,
+      "time": "2026-05-11T22:05:47+00:00"
+    },
     {
       "user_id": "trial-2c256c5d-b6d7-4d7e-bed1-adeda7817ab7",
       "ksbaoUserId": "",
