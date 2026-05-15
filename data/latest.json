@@ -1,12 +1,40 @@
 {
-  "updateTime": "2026-05-14T19:45:03.919101",
-  "dataCount": 3373,
-  "userCount": 614,
+  "updateTime": "2026-05-15T19:37:53.090871",
+  "dataCount": 3375,
+  "userCount": 615,
   "timeRange": {
     "start": "2026-01-06T12:22:02+00:00",
-    "end": "2026-05-13T19:19:20+00:00"
+    "end": "2026-05-15T10:19:49+00:00"
   },
   "data": [
+    {
+      "user_id": "trial-e7b5e603-ea31-4a57-a6d9-04b0efc67f12",
+      "ksbaoUserId": "",
+      "module": "引导页",
+      "action_type": "click",
+      "element": "跳过按钮",
+      "status": "success",
+      "trial": 1,
+      "is_vip": false,
+      "subject": "blplatform",
+      "km": "未设置科目",
+      "provider": null,
+      "time": "2026-05-15T10:19:49+00:00"
+    },
+    {
+      "user_id": "trial-e7b5e603-ea31-4a57-a6d9-04b0efc67f12",
+      "ksbaoUserId": "",
+      "module": "引导页",
+      "action_type": "enter",
+      "element": "引导页访问",
+      "status": "success",
+      "trial": 1,
+      "is_vip": false,
+      "subject": "blplatform",
+      "km": "未设置科目",
+      "provider": null,
+      "time": "2026-05-15T10:19:47+00:00"
+    },
     {
       "user_id": "trial-469a4d04-9ebb-479e-89e5-1db8128bf657",
       "ksbaoUserId": "",
